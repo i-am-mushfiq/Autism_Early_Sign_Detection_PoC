@@ -1,0 +1,29 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+
+// The ML Kit plugins declare compileSdk 35, which the Android Gradle Plugin
+// used here (7.3) cannot read during release resource verification. Their
+// Java wrappers only use API 34 surface, so build them against 34 like the app.
+subprojects {
+    afterEvaluate { project ->
+        if (project.name.startsWith("google_mlkit") && project.hasProperty("android")) {
+            project.android.compileSdkVersion 34
+        }
+    }
+}
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

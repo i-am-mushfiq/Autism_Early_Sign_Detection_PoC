@@ -1,0 +1,12 @@
+# Only the app source and project docs are versioned here.
+# APKs, decks, submission documents, design binaries and the landing page
+# (its own repository) stay out of this repo.
+/*
+!/.gitignore
+!/README.md
+!/CLAUDE.md
+!/mobile/
+/mobile/*
+!/mobile/sanket_mobile/
+
+/mobile/sanket_mobile/test-*.txt
