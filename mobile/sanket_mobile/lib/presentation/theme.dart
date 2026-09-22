@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/locale_scope.dart';
+import '../tour/tour_scope.dart';
 
 class SanketColors {
   static const primary = Color(0xff176b57);
@@ -28,9 +29,13 @@ ThemeData sanketTheme(AppLanguage language) {
   // Bangla script needs more line height to stay readable.
   final height = language == AppLanguage.bn ? 1.5 : 1.35;
   return base.copyWith(
-    textTheme: base.textTheme.apply(bodyColor: SanketColors.ink, displayColor: SanketColors.ink).copyWith(
-          bodyMedium: base.textTheme.bodyMedium?.copyWith(height: height, fontSize: 15),
-          bodyLarge: base.textTheme.bodyLarge?.copyWith(height: height, fontSize: 16),
+    textTheme: base.textTheme
+        .apply(bodyColor: SanketColors.ink, displayColor: SanketColors.ink)
+        .copyWith(
+          bodyMedium:
+              base.textTheme.bodyMedium?.copyWith(height: height, fontSize: 15),
+          bodyLarge:
+              base.textTheme.bodyLarge?.copyWith(height: height, fontSize: 16),
         ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
@@ -54,22 +59,28 @@ ThemeData sanketTheme(AppLanguage language) {
       fillColor: Colors.white,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: SanketColors.border)),
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: SanketColors.border)),
     ),
   );
 }
 
 /// Overline + title + optional lead, as used across Sanket's screens.
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.overline, required this.title, this.lead});
+  const SectionHeader(
+      {super.key, required this.overline, required this.title, this.lead});
   final String overline, title;
   final String? lead;
 
   @override
-  Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  Widget build(BuildContext context) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(overline.toUpperCase(),
             style: const TextStyle(
-                color: SanketColors.primary, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2)),
+                color: SanketColors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                letterSpacing: 1.2)),
         const SizedBox(height: 10),
         Semantics(
           header: true,
@@ -82,12 +93,19 @@ class SectionHeader extends StatelessWidget {
         if (lead != null)
           Padding(
               padding: const EdgeInsets.only(top: 12),
-              child: Text(lead!, style: const TextStyle(fontSize: 16, color: SanketColors.muted, height: 1.5))),
+              child: Text(lead!,
+                  style: const TextStyle(
+                      fontSize: 16, color: SanketColors.muted, height: 1.5))),
       ]);
 }
 
 class InfoCard extends StatelessWidget {
-  const InfoCard({super.key, required this.child, this.color, this.padding = 18, this.margin = 16});
+  const InfoCard(
+      {super.key,
+      required this.child,
+      this.color,
+      this.padding = 18,
+      this.margin = 16});
   final Widget child;
   final Color? color;
   final double padding, margin;
@@ -105,7 +123,12 @@ class InfoCard extends StatelessWidget {
 }
 
 class IconNote extends StatelessWidget {
-  const IconNote({super.key, required this.icon, required this.text, this.color, this.iconColor});
+  const IconNote(
+      {super.key,
+      required this.icon,
+      required this.text,
+      this.color,
+      this.iconColor});
   final IconData icon;
   final String text;
   final Color? color, iconColor;
@@ -121,7 +144,12 @@ class IconNote extends StatelessWidget {
 }
 
 class PrimaryButton extends StatelessWidget {
-  const PrimaryButton({super.key, required this.label, required this.onPressed, this.icon, this.pale = false});
+  const PrimaryButton(
+      {super.key,
+      required this.label,
+      required this.onPressed,
+      this.icon,
+      this.pale = false});
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
@@ -130,24 +158,39 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = pale
-        ? FilledButton.styleFrom(backgroundColor: SanketColors.pale, foregroundColor: SanketColors.primary)
+        ? FilledButton.styleFrom(
+            backgroundColor: SanketColors.pale,
+            foregroundColor: SanketColors.primary)
         : null;
-    return Padding(
-      padding: const EdgeInsets.only(top: 14),
-      child: SizedBox(
-        width: double.infinity,
-        child: icon == null
-            ? FilledButton(onPressed: onPressed, style: style, child: Text(label, textAlign: TextAlign.center))
-            : FilledButton.icon(onPressed: onPressed, style: style, icon: Icon(icon), label: Text(label)),
-      ),
-    );
+    return TourTarget(
+        label: label,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 14),
+          child: SizedBox(
+            width: double.infinity,
+            child: icon == null
+                ? FilledButton(
+                    onPressed: onPressed,
+                    style: style,
+                    child: Text(label, textAlign: TextAlign.center))
+                : FilledButton.icon(
+                    onPressed: onPressed,
+                    style: style,
+                    icon: Icon(icon),
+                    label: Text(label)),
+          ),
+        ));
   }
 }
 
 /// Large two-option selector used for yes/no profile questions.
 class ChoiceQuestion<V> extends StatelessWidget {
   const ChoiceQuestion(
-      {super.key, required this.label, required this.value, required this.options, required this.onChanged});
+      {super.key,
+      required this.label,
+      required this.value,
+      required this.options,
+      required this.onChanged});
   final String label;
   final V value;
   final Map<V, String> options;
@@ -157,26 +200,48 @@ class ChoiceQuestion<V> extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 18),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          Text(label,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: SegmentedButton<V>(
-              showSelectedIcon: false,
-              style: SegmentedButton.styleFrom(minimumSize: const Size(48, 48)),
-              segments: [
-                for (final e in options.entries) ButtonSegment(value: e.key, label: Text(e.value)),
+          if (options.length <= 3)
+            SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<V>(
+                showSelectedIcon: false,
+                style:
+                    SegmentedButton.styleFrom(minimumSize: const Size(48, 48)),
+                segments: [
+                  for (final e in options.entries)
+                    ButtonSegment(value: e.key, label: Text(e.value)),
+                ],
+                selected: {value},
+                onSelectionChanged: (v) => onChanged(v.first),
+              ),
+            )
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final e in options.entries)
+                  ChoiceChip(
+                    label: Text(e.value),
+                    selected: e.key == value,
+                    onSelected: (_) => onChanged(e.key),
+                  ),
               ],
-              selected: {value},
-              onSelectionChanged: (v) => onChanged(v.first),
             ),
-          ),
         ]),
       );
 }
 
 class StatusPill extends StatelessWidget {
-  const StatusPill({super.key, required this.text, this.color = SanketColors.primary, this.background});
+  const StatusPill(
+      {super.key,
+      required this.text,
+      this.color = SanketColors.primary,
+      this.background});
   final String text;
   final Color color;
   final Color? background;
@@ -185,6 +250,9 @@ class StatusPill extends StatelessWidget {
   Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-          color: background ?? Colors.white.withOpacity(.9), borderRadius: BorderRadius.circular(20)),
-      child: Text(text, style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 13)));
+          color: background ?? Colors.white.withOpacity(.9),
+          borderRadius: BorderRadius.circular(20)),
+      child: Text(text,
+          style: TextStyle(
+              color: color, fontWeight: FontWeight.w800, fontSize: 13)));
 }

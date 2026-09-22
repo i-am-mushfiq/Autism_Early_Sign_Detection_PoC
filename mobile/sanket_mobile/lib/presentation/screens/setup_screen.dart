@@ -26,20 +26,27 @@ class EnvironmentReadiness {
 
   static LiveCheck lighting(List<VisionFrame> recent) {
     final q = assessLighting(recent);
-    if (q.status == QualityStatus.unavailable) return const LiveCheck(CheckState.checking, T.statusChecking);
+    if (q.status == QualityStatus.unavailable)
+      return const LiveCheck(CheckState.checking, T.statusChecking);
     if (q.usable) return const LiveCheck(CheckState.good, T.statusGood);
-    return LiveCheck(CheckState.problem, q.reason == ReasonCode.tooBright ? T.statusTooBright : T.statusTooDark);
+    return LiveCheck(CheckState.problem,
+        q.reason == ReasonCode.tooBright ? T.statusTooBright : T.statusTooDark);
   }
 
   static LiveCheck camera(List<VisionFrame> recent, {required bool available}) {
-    if (!available) return const LiveCheck(CheckState.unavailable, T.statusUnavailable);
-    if (recent.isEmpty) return const LiveCheck(CheckState.checking, T.statusChecking);
+    if (!available)
+      return const LiveCheck(CheckState.unavailable, T.statusUnavailable);
+    if (recent.isEmpty)
+      return const LiveCheck(CheckState.checking, T.statusChecking);
     final q = assessCamera(recent, windowMs, available: true);
-    return q.usable ? const LiveCheck(CheckState.good, T.statusGood) : const LiveCheck(CheckState.problem, T.statusSlow);
+    return q.usable
+        ? const LiveCheck(CheckState.good, T.statusGood)
+        : const LiveCheck(CheckState.problem, T.statusSlow);
   }
 
   static LiveCheck face(List<VisionFrame> recent) {
-    if (recent.isEmpty) return const LiveCheck(CheckState.checking, T.statusChecking);
+    if (recent.isEmpty)
+      return const LiveCheck(CheckState.checking, T.statusChecking);
     final q = assessFace(recent, minFraction: 0.6);
     if (q.usable) return const LiveCheck(CheckState.good, T.statusGood);
     return LiveCheck(
@@ -54,17 +61,29 @@ class EnvironmentReadiness {
   }
 
   static LiveCheck noise(List<AudioLevel> recent, {required bool available}) {
-    if (!available) return const LiveCheck(CheckState.unavailable, T.statusUnavailable);
-    if (recent.length < 5) return const LiveCheck(CheckState.checking, T.statusChecking);
+    if (!available)
+      return const LiveCheck(CheckState.unavailable, T.statusUnavailable);
+    if (recent.length < 5)
+      return const LiveCheck(CheckState.checking, T.statusChecking);
     final q = assessAudioFloor(recent, available: true);
-    return q.usable ? const LiveCheck(CheckState.good, T.statusGood) : const LiveCheck(CheckState.problem, T.statusNoisy);
+    return q.usable
+        ? const LiveCheck(CheckState.good, T.statusGood)
+        : const LiveCheck(CheckState.problem, T.statusNoisy);
   }
 }
 
 class SetupScreen extends StatefulWidget {
-  const SetupScreen({super.key, required this.session, required this.onBegin});
+  const SetupScreen(
+      {super.key,
+      required this.session,
+      required this.onBegin,
+      this.isTour = false});
   final SessionController session;
   final VoidCallback onBegin;
+
+  /// The demo tour has no real camera/microphone to grant, so this screen
+  /// never shows the permission request step for it.
+  final bool isTour;
 
   @override
   State<SetupScreen> createState() => _SetupScreenState();
@@ -84,13 +103,23 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Skips the "Allow camera/mic" step from the very first frame, so it
+    // never flashes a button there is nothing real to grant.
+    if (widget.isTour) _requested = true;
     _init();
   }
 
   Future<void> _init() async {
+    if (widget.isTour) {
+      await session.refreshPermissions();
+      await session.startSensors();
+      if (mounted) setState(() {});
+      return;
+    }
     await session.refreshPermissions();
     final p = session.permissionResult!;
-    if (p.camera == PermissionState.granted || p.microphone == PermissionState.granted) {
+    if (p.camera == PermissionState.granted ||
+        p.microphone == PermissionState.granted) {
       _requested = true;
       await _startSensors(request: false);
     }
@@ -100,7 +129,8 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Returning from system settings: pick up newly granted permissions.
-    if (state == AppLifecycleState.resumed && _requested) _startSensors(request: false);
+    if (!widget.isTour && state == AppLifecycleState.resumed && _requested)
+      _startSensors(request: false);
   }
 
   Future<void> _startSensors({required bool request}) async {
@@ -149,31 +179,51 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
     final p = session.permissionResult;
     final a = session.availability;
     final checks = <(T, LiveCheck)>[
-      (T.checkCamera, EnvironmentReadiness.camera(_frames, available: a.camera)),
+      (
+        T.checkCamera,
+        EnvironmentReadiness.camera(_frames, available: a.camera)
+      ),
       if (a.camera) (T.checkLighting, EnvironmentReadiness.lighting(_frames)),
       if (a.camera) (T.checkFace, EnvironmentReadiness.face(_frames)),
-      (T.checkQuiet, EnvironmentReadiness.noise(_audio, available: a.microphone)),
+      (
+        T.checkQuiet,
+        EnvironmentReadiness.noise(_audio, available: a.microphone)
+      ),
       (T.checkTouch, const LiveCheck(CheckState.good, T.statusGood)),
     ];
+    if (widget.isTour) {
+      for (var i = 0; i < checks.length; i++) {
+        checks[i] =
+            (checks[i].$1, const LiveCheck(CheckState.good, T.statusGood));
+      }
+    }
     final allGood = checks.every((c) => c.$2.state == CheckState.good);
     final preview = session.sensors.preview();
     final permanentlyDenied = p != null &&
-        (p.camera == PermissionState.permanentlyDenied || p.microphone == PermissionState.permanentlyDenied);
+        (p.camera == PermissionState.permanentlyDenied ||
+            p.microphone == PermissionState.permanentlyDenied);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        SectionHeader(overline: s(T.setupOverline), title: s(T.setupTitle), lead: s(T.setupLead, {'name': name})),
+        SectionHeader(
+            overline: s(T.setupOverline),
+            title: s(T.setupTitle),
+            lead: s(T.setupLead, {'name': name})),
         if (!_requested) ...[
           InfoCard(
             color: SanketColors.mint,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                const Icon(Icons.videocam_outlined, color: SanketColors.primary),
+                const Icon(Icons.videocam_outlined,
+                    color: SanketColors.primary),
                 const SizedBox(width: 6),
                 const Icon(Icons.mic_none, color: SanketColors.primary),
                 const SizedBox(width: 10),
-                Expanded(child: Text(s(T.setupPermissionTitle), style: const TextStyle(fontWeight: FontWeight.w800))),
+                Expanded(
+                    child: Text(s(T.setupPermissionTitle),
+                        style: const TextStyle(fontWeight: FontWeight.w800))),
               ]),
               const SizedBox(height: 8),
               Text(s(T.setupPermissionBody, {'name': name})),
@@ -184,6 +234,11 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
               icon: Icons.lock_open,
               onPressed: _starting ? null : () => _startSensors(request: true)),
         ] else ...[
+          if (widget.isTour)
+            IconNote(
+                icon: Icons.info_outline,
+                color: SanketColors.cream,
+                text: s(T.tourActualPrivacy)),
           if (preview != null)
             InfoCard(
               padding: 8,
@@ -191,12 +246,15 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
               child: Column(children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: ConstrainedBox(constraints: const BoxConstraints(maxHeight: 260), child: preview),
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 260),
+                      child: preview),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(s(T.setupTipFace, {'name': name}),
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600)),
                 ),
               ]),
             ),
@@ -213,11 +271,21 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
                 color: SanketColors.warnSoft,
                 text: s(T.setupMicDenied, {'name': name})),
           if (permanentlyDenied)
-            PrimaryButton(label: s(T.setupOpenSettings), pale: true, icon: Icons.settings, onPressed: session.permissions.openSettings)
+            PrimaryButton(
+                label: s(T.setupOpenSettings),
+                pale: true,
+                icon: Icons.settings,
+                onPressed: session.permissions.openSettings)
           else if (!a.camera || !a.microphone)
-            PrimaryButton(label: s(T.setupAllow), pale: true, onPressed: _starting ? null : () => _startSensors(request: true)),
+            PrimaryButton(
+                label: s(T.setupAllow),
+                pale: true,
+                onPressed:
+                    _starting ? null : () => _startSensors(request: true)),
           const SizedBox(height: 18),
-          Text(s(T.setupChecksTitle), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+          Text(s(T.setupChecksTitle),
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
           InfoCard(
             padding: 6,
             child: Column(children: [
@@ -233,13 +301,18 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
                         CheckState.problem => Icons.warning_amber_rounded,
                         CheckState.unavailable => Icons.remove_circle_outline,
                       },
-                      color: check.state == CheckState.good ? SanketColors.leaf : SanketColors.warn,
+                      color: check.state == CheckState.good
+                          ? SanketColors.leaf
+                          : SanketColors.warn,
                     ),
-                    title: Text(s(label), style: const TextStyle(fontWeight: FontWeight.w600)),
+                    title: Text(s(label),
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                     trailing: Text(s(check.label),
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            color: check.state == CheckState.good ? SanketColors.primary : SanketColors.warn)),
+                            color: check.state == CheckState.good
+                                ? SanketColors.primary
+                                : SanketColors.warn)),
                   ),
                 ),
             ]),
@@ -247,10 +320,12 @@ class _SetupScreenState extends State<SetupScreen> with WidgetsBindingObserver {
           if (!allGood)
             Padding(
               padding: const EdgeInsets.only(top: 12),
-              child: Text(s(T.setupContinueAnyway), style: const TextStyle(color: SanketColors.muted)),
+              child: Text(s(T.setupContinueAnyway),
+                  style: const TextStyle(color: SanketColors.muted)),
             ),
           const SizedBox(height: 6),
-          Text(s(T.setupRotateHint), style: const TextStyle(color: SanketColors.muted, fontSize: 13)),
+          Text(s(T.setupRotateHint),
+              style: const TextStyle(color: SanketColors.muted, fontSize: 13)),
           PrimaryButton(
             label: s(T.setupBegin),
             icon: Icons.screen_rotation_alt,

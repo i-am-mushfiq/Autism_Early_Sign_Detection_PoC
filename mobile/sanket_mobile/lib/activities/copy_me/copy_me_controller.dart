@@ -12,7 +12,11 @@ class CopyMeController extends ActivityController {
   CopyMeController(super.ctx, {this.detector = const PoseActionDetector()});
   final PoseActionDetector detector;
 
-  static const actions = [CopyAction.handsUp, CopyAction.clap, CopyAction.touchHead];
+  static const actions = [
+    CopyAction.handsUp,
+    CopyAction.clap,
+    CopyAction.touchHead
+  ];
 
   @override
   ActivityId get id => ActivityId.copyMe;
@@ -21,7 +25,8 @@ class CopyMeController extends ActivityController {
   @override
   VisionMode get visionMode => VisionMode.pose;
   @override
-  int get expectedDurationMs => actions.length * (P.copyDemoMs + P.copyWindowMs + 2500);
+  int get expectedDurationMs =>
+      actions.length * (P.copyDemoMs + P.copyWindowMs + 2500);
 
   CopyPhase copyPhase = CopyPhase.framing;
   int trial = 0;
@@ -34,8 +39,9 @@ class CopyMeController extends ActivityController {
   int _windowStart = 0;
 
   @override
-  double get progress =>
-      phase == ActivityPhase.running ? ((trial - 1).clamp(0, actions.length) / actions.length) : super.progress;
+  double get progress => phase == ActivityPhase.running
+      ? ((trial - 1).clamp(0, actions.length) / actions.length)
+      : super.progress;
 
   @override
   void onStart() {
@@ -67,14 +73,18 @@ class CopyMeController extends ActivityController {
         if (_framedRun >= 3) _demo();
       case CopyPhase.window:
         if (seen != null) return;
-        final window = [for (final x in frames) if (x.tMs >= _windowStart) x];
+        final window = [
+          for (final x in frames)
+            if (x.tMs >= _windowStart) x
+        ];
         final detected = detector.detect(window);
         if (detected != null) {
           seen = detected;
           final token = _token;
           // End the window shortly after a movement so the pace stays brisk.
           after(900, () {
-            if (token == _token && copyPhase == CopyPhase.window) _closeWindow();
+            if (token == _token && copyPhase == CopyPhase.window)
+              _closeWindow();
           });
           notify();
         }

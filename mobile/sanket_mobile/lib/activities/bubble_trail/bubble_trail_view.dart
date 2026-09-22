@@ -8,7 +8,8 @@ import '../../presentation/widgets/frame_ticker.dart';
 import 'bubble_trail_controller.dart';
 
 class BubbleTrailBoard extends StatefulWidget {
-  const BubbleTrailBoard({super.key, required this.controller, required this.name});
+  const BubbleTrailBoard(
+      {super.key, required this.controller, required this.name});
   final BubbleTrailController controller;
   final String name;
 
@@ -38,14 +39,18 @@ class _BubbleTrailBoardState extends State<BubbleTrailBoard> {
           builder: (context, now) => ActivityBoard(
             colors: const [Color(0xffa7e1fa), Color(0xffe5efab)],
             banner: c.showHint
-                ? BoardBanner(text: s(T.bubbleInactive, {'name': widget.name}), icon: Icons.touch_app)
+                ? BoardBanner(
+                    text: s(T.bubbleInactive, {'name': widget.name}),
+                    icon: Icons.touch_app)
                 : null,
             child: Stack(children: [
-              Positioned.fill(child: CustomPaint(painter: _BubblePainter(c, now))),
+              Positioned.fill(
+                  child: CustomPaint(painter: _BubblePainter(c, now))),
               Positioned(
                 right: 14,
                 bottom: 14,
-                child: StatusPill(text: s(T.bubblePopped, {'n': c.poppedCount})),
+                child:
+                    StatusPill(text: s(T.bubblePopped, {'n': c.poppedCount})),
               ),
             ]),
           ),
@@ -65,13 +70,17 @@ class _BubblePainter extends CustomPainter {
     for (final b in c.alive) {
       final center = b.centerAt(now, size);
       final r = b.radius(size);
-      canvas.drawCircle(center, r, Paint()..color = Color(b.color).withOpacity(.82));
-      canvas.drawCircle(center, r,
+      canvas.drawCircle(
+          center, r, Paint()..color = Color(b.color).withOpacity(.82));
+      canvas.drawCircle(
+          center,
+          r,
           Paint()
             ..color = Colors.white
             ..style = PaintingStyle.stroke
             ..strokeWidth = 3);
-      canvas.drawCircle(center.translate(-r * .35, -r * .35), r * .18, Paint()..color = Colors.white.withOpacity(.8));
+      canvas.drawCircle(center.translate(-r * .35, -r * .35), r * .18,
+          Paint()..color = Colors.white.withOpacity(.8));
     }
     for (final p in c.popped) {
       final t = ((now - p.atMs) / 450).clamp(0.0, 1.0);

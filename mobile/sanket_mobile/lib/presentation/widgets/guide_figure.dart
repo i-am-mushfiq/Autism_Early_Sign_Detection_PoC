@@ -50,7 +50,8 @@ class _GuidePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
-    final headC = Offset(w * .5 + look * w * .09, h * .30 + look.abs() * h * .01);
+    final headC =
+        Offset(w * .5 + look * w * .09, h * .30 + look.abs() * h * .01);
     final headR = w * .2;
     final shoulderY = h * .56;
     final lShoulder = Offset(w * .3, shoulderY);
@@ -101,7 +102,8 @@ class _GuidePainter extends CustomPainter {
         rHand = Offset(headC.dx + headR * .7, headC.dy - headR * 1.05);
     }
     for (final (s, hand) in [(lShoulder, lHand), (rShoulder, rHand)]) {
-      final elbow = Offset((s.dx + hand.dx) / 2 + (hand.dx < w / 2 ? -w * .04 : w * .04),
+      final elbow = Offset(
+          (s.dx + hand.dx) / 2 + (hand.dx < w / 2 ? -w * .04 : w * .04),
           (s.dy + hand.dy) / 2 + h * .02);
       canvas.drawPath(
           Path()
@@ -112,17 +114,33 @@ class _GuidePainter extends CustomPainter {
     }
 
     // Neck, hair back, head.
-    canvas.drawRect(Rect.fromCenter(center: Offset(headC.dx, headC.dy + headR), width: w * .1, height: headR),
+    canvas.drawRect(
+        Rect.fromCenter(
+            center: Offset(headC.dx, headC.dy + headR),
+            width: w * .1,
+            height: headR),
         Paint()..color = skinShade);
-    canvas.drawCircle(Offset(headC.dx, headC.dy - headR * .05), headR * 1.08, Paint()..color = hair);
-    canvas.drawCircle(Offset(headC.dx + look * headR * .2, headC.dy - headR * 1.05), headR * .38,
+    canvas.drawCircle(Offset(headC.dx, headC.dy - headR * .05), headR * 1.08,
+        Paint()..color = hair);
+    canvas.drawCircle(
+        Offset(headC.dx + look * headR * .2, headC.dy - headR * 1.05),
+        headR * .38,
         Paint()..color = hair);
     canvas.drawOval(
-        Rect.fromCenter(center: headC, width: headR * 1.9 * (1 - look.abs() * .08), height: headR * 2.05),
+        Rect.fromCenter(
+            center: headC,
+            width: headR * 1.9 * (1 - look.abs() * .08),
+            height: headR * 2.05),
         Paint()..color = skin);
     // Fringe.
-    canvas.drawArc(Rect.fromCenter(center: Offset(headC.dx, headC.dy - headR * .15), width: headR * 2, height: headR * 1.9),
-        math.pi * 1.05, math.pi * .9, false,
+    canvas.drawArc(
+        Rect.fromCenter(
+            center: Offset(headC.dx, headC.dy - headR * .15),
+            width: headR * 2,
+            height: headR * 1.9),
+        math.pi * 1.05,
+        math.pi * .9,
+        false,
         Paint()
           ..color = hair
           ..style = PaintingStyle.stroke
@@ -134,9 +152,14 @@ class _GuidePainter extends CustomPainter {
     final pupilShift = look * headR * .26;
     for (final side in [-1.0, 1.0]) {
       final c = Offset(headC.dx + side * eyeDx + look * headR * .12, eyeY);
-      canvas.drawOval(Rect.fromCenter(center: c, width: headR * .42, height: headR * .34), Paint()..color = Colors.white);
-      canvas.drawCircle(Offset(c.dx + pupilShift, c.dy), headR * .12, Paint()..color = const Color(0xff1d1410));
-      canvas.drawCircle(Offset(c.dx + pupilShift - headR * .04, c.dy - headR * .04), headR * .035,
+      canvas.drawOval(
+          Rect.fromCenter(center: c, width: headR * .42, height: headR * .34),
+          Paint()..color = Colors.white);
+      canvas.drawCircle(Offset(c.dx + pupilShift, c.dy), headR * .12,
+          Paint()..color = const Color(0xff1d1410));
+      canvas.drawCircle(
+          Offset(c.dx + pupilShift - headR * .04, c.dy - headR * .04),
+          headR * .035,
           Paint()..color = Colors.white);
     }
     // Brows.
@@ -146,20 +169,34 @@ class _GuidePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     for (final side in [-1.0, 1.0]) {
       final x = headC.dx + side * eyeDx + look * headR * .12;
-      canvas.drawLine(Offset(x - headR * .16, eyeY - headR * .3), Offset(x + headR * .16, eyeY - headR * .33), brow);
+      canvas.drawLine(Offset(x - headR * .16, eyeY - headR * .3),
+          Offset(x + headR * .16, eyeY - headR * .33), brow);
     }
     // Cheeks & mouth.
     for (final side in [-1.0, 1.0]) {
-      canvas.drawCircle(Offset(headC.dx + side * headR * .62 + look * headR * .1, headC.dy + headR * .42), headR * .14,
+      canvas.drawCircle(
+          Offset(headC.dx + side * headR * .62 + look * headR * .1,
+              headC.dy + headR * .42),
+          headR * .14,
           Paint()..color = const Color(0x55f07a7a));
     }
-    final mouthC = Offset(headC.dx + look * headR * .15, headC.dy + headR * .55);
-    final open = talking ? (math.sin(phase * math.pi * 6).abs() * .13 + .05) : .04;
-    canvas.drawOval(Rect.fromCenter(center: mouthC, width: headR * .4, height: headR * open * 1.5),
+    final mouthC =
+        Offset(headC.dx + look * headR * .15, headC.dy + headR * .55);
+    final open =
+        talking ? (math.sin(phase * math.pi * 6).abs() * .13 + .05) : .04;
+    canvas.drawOval(
+        Rect.fromCenter(
+            center: mouthC, width: headR * .4, height: headR * open * 1.5),
         Paint()..color = const Color(0xffb04a44));
     if (!talking) {
-      canvas.drawArc(Rect.fromCenter(center: mouthC.translate(0, -headR * .05), width: headR * .6, height: headR * .35),
-          .2, math.pi - .4, false,
+      canvas.drawArc(
+          Rect.fromCenter(
+              center: mouthC.translate(0, -headR * .05),
+              width: headR * .6,
+              height: headR * .35),
+          .2,
+          math.pi - .4,
+          false,
           Paint()
             ..color = const Color(0xff8c2f2f)
             ..style = PaintingStyle.stroke
@@ -167,10 +204,14 @@ class _GuidePainter extends CustomPainter {
             ..strokeCap = StrokeCap.round);
     }
     // Hair clip.
-    canvas.drawCircle(Offset(headC.dx + headR * .75, headC.dy - headR * .7), headR * .12, Paint()..color = orna);
+    canvas.drawCircle(Offset(headC.dx + headR * .75, headC.dy - headR * .7),
+        headR * .12, Paint()..color = orna);
   }
 
   @override
   bool shouldRepaint(_GuidePainter old) =>
-      old.look != look || old.talking != talking || old.arms != arms || old.phase != phase;
+      old.look != look ||
+      old.talking != talking ||
+      old.arms != arms ||
+      old.phase != phase;
 }

@@ -4,17 +4,41 @@ import 'interpretation.dart';
 import 'measurement.dart';
 import 'prototype_parameters.dart';
 
-enum TrialPhase { instructions, ready, running, paused, completed, skipped, stopped }
+enum TrialPhase {
+  instructions,
+  ready,
+  running,
+  paused,
+  completed,
+  skipped,
+  stopped
+}
 
 /// Legal phase transitions for one activity attempt.
 class ActivityStateMachine {
   TrialPhase phase = TrialPhase.instructions;
 
   static const _permitted = {
-    TrialPhase.instructions: [TrialPhase.ready, TrialPhase.skipped, TrialPhase.stopped],
-    TrialPhase.ready: [TrialPhase.running, TrialPhase.skipped, TrialPhase.stopped],
-    TrialPhase.running: [TrialPhase.paused, TrialPhase.completed, TrialPhase.stopped],
-    TrialPhase.paused: [TrialPhase.ready, TrialPhase.skipped, TrialPhase.stopped],
+    TrialPhase.instructions: [
+      TrialPhase.ready,
+      TrialPhase.skipped,
+      TrialPhase.stopped
+    ],
+    TrialPhase.ready: [
+      TrialPhase.running,
+      TrialPhase.skipped,
+      TrialPhase.stopped
+    ],
+    TrialPhase.running: [
+      TrialPhase.paused,
+      TrialPhase.completed,
+      TrialPhase.stopped
+    ],
+    TrialPhase.paused: [
+      TrialPhase.ready,
+      TrialPhase.skipped,
+      TrialPhase.stopped
+    ],
     TrialPhase.completed: [TrialPhase.ready],
     TrialPhase.skipped: <TrialPhase>[],
     TrialPhase.stopped: <TrialPhase>[],
@@ -56,7 +80,8 @@ class ChildProfile {
   final ScreenFamiliarity screenFamiliarity;
 
   bool get ageSupported =>
-      ageMonths >= PrototypeParameters.minAgeMonths && ageMonths <= PrototypeParameters.maxAgeMonths;
+      ageMonths >= PrototypeParameters.minAgeMonths &&
+      ageMonths <= PrototypeParameters.maxAgeMonths;
 
   ChildContext get context => ChildContext(
       ageMonths: ageMonths,
@@ -79,13 +104,16 @@ class ChildProfile {
   factory ChildProfile.fromJson(Map<String, dynamic> j) => ChildProfile(
         nickname: j['nickname'] as String,
         ageMonths: j['ageMonths'] as int,
-        primaryLanguage: PrimaryLanguage.values.byName(j['primaryLanguage'] as String),
-        otherLanguage: OtherLanguage.values.byName(j['otherLanguage'] as String),
+        primaryLanguage:
+            PrimaryLanguage.values.byName(j['primaryLanguage'] as String),
+        otherLanguage:
+            OtherLanguage.values.byName(j['otherLanguage'] as String),
         hearingConcern: j['hearingConcern'] as bool,
         visionConcern: j['visionConcern'] as bool,
         motorDifficulty: j['motorDifficulty'] as bool,
         priorConcern: j['priorConcern'] as bool? ?? false,
-        screenFamiliarity: ScreenFamiliarity.values.byName(j['screenFamiliarity'] as String),
+        screenFamiliarity:
+            ScreenFamiliarity.values.byName(j['screenFamiliarity'] as String),
       );
 }
 
@@ -113,11 +141,16 @@ class ConsentChoices {
 
   bool get canStart => processing;
 
-  ConsentChoices copyWith({bool? processing, bool? storeOnDevice, bool? shareWithProfessional, bool? research}) =>
+  ConsentChoices copyWith(
+          {bool? processing,
+          bool? storeOnDevice,
+          bool? shareWithProfessional,
+          bool? research}) =>
       ConsentChoices(
         processing: processing ?? this.processing,
         storeOnDevice: storeOnDevice ?? this.storeOnDevice,
-        shareWithProfessional: shareWithProfessional ?? this.shareWithProfessional,
+        shareWithProfessional:
+            shareWithProfessional ?? this.shareWithProfessional,
         research: research ?? this.research,
       );
 
@@ -228,24 +261,29 @@ class SessionRecord {
     return SessionRecord(
       id: j['id'] as String,
       startedAt: DateTime.parse(j['startedAt'] as String),
-      endedAt: j['endedAt'] == null ? null : DateTime.parse(j['endedAt'] as String),
+      endedAt:
+          j['endedAt'] == null ? null : DateTime.parse(j['endedAt'] as String),
       status: SessionStatus.values.byName(j['status'] as String),
-      profile: ChildProfile.fromJson(Map<String, dynamic>.from(j['profile'] as Map)),
-      consents: ConsentChoices.fromJson(Map<String, dynamic>.from(j['consents'] as Map)),
+      profile:
+          ChildProfile.fromJson(Map<String, dynamic>.from(j['profile'] as Map)),
+      consents: ConsentChoices.fromJson(
+          Map<String, dynamic>.from(j['consents'] as Map)),
       sensors: SensorAvailability(
           camera: s['camera'] as bool,
           microphone: s['microphone'] as bool,
           cameraDenied: s['cameraDenied'] as bool? ?? false,
           microphoneDenied: s['microphoneDenied'] as bool? ?? false),
       appLanguage: j['appLanguage'] as String,
-      calibration: CalibrationResult.fromJson(Map<String, dynamic>.from(j['calibration'] as Map)),
+      calibration: CalibrationResult.fromJson(
+          Map<String, dynamic>.from(j['calibration'] as Map)),
       observations: [
         for (final o in j['observations'] as List)
           ActivityObservation.fromJson(Map<String, dynamic>.from(o as Map))
       ],
       outcome: j['outcome'] == null
           ? null
-          : SessionOutcome.fromJson(Map<String, dynamic>.from(j['outcome'] as Map)),
+          : SessionOutcome.fromJson(
+              Map<String, dynamic>.from(j['outcome'] as Map)),
     );
   }
 }

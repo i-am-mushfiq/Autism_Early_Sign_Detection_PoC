@@ -24,7 +24,8 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
 
   @override
   ActivityObservation analyze(ActivityCapture c) {
-    final camera = assessCamera(c.frames, c.durationMs, available: c.sensors.camera);
+    final camera =
+        assessCamera(c.frames, c.durationMs, available: c.sensors.camera);
     final lighting = assessLighting(c.frames);
     final face = assessFace(c.frames, minFraction: 0.35);
     final floors = [
@@ -44,9 +45,10 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
                 c.eventsOf(call).every((e) => e.data['source'] == 'audio')
                     ? QualityStatus.valid
                     : QualityStatus.limited,
-                reason: c.eventsOf(call).every((e) => e.data['source'] == 'audio')
-                    ? null
-                    : ReasonCode.callTimedByCaregiver,
+                reason:
+                    c.eventsOf(call).every((e) => e.data['source'] == 'audio')
+                        ? null
+                        : ReasonCode.callTimedByCaregiver,
                 value: median(floors));
     final quality = [camera, lighting, face, audio];
 
@@ -56,13 +58,15 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
     }
 
     final valid = trials.where((t) => t.valid).toList();
-    final responded = valid.where((t) => t.measures['responded'] == true).toList();
+    final responded =
+        valid.where((t) => t.measures['responded'] == true).toList();
     final audioLatencies = [
       for (final t in responded)
         if (t.measures['timing'] == 'audio') t.measures['latencyMs'] as int
     ];
     final features = <Feature>[
-      Feature('valid_trials', valid.length.toDouble(), Modality.face, unit: 'count'),
+      Feature('valid_trials', valid.length.toDouble(), Modality.face,
+          unit: 'count'),
       if (valid.isNotEmpty)
         Feature('response_rate', responded.length / valid.length, Modality.face,
             unit: 'ratio',
@@ -72,8 +76,9 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
       if (audioLatencies.isNotEmpty)
         Feature('median_latency_ms', median(audioLatencies)!, Modality.audio,
             unit: 'ms',
-            reliability:
-                audioLatencies.length >= 2 ? Reliability.adequate : Reliability.limited),
+            reliability: audioLatencies.length >= 2
+                ? Reliability.adequate
+                : Reliability.limited),
       if (responded.isNotEmpty)
         Feature(
             'reengaged_rate',
@@ -83,7 +88,8 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
             unit: 'ratio'),
     ];
 
-    ActivityObservation result(ActivityStatus s, {ReasonCode? reason, List<PatternNote> notes = const []}) =>
+    ActivityObservation result(ActivityStatus s,
+            {ReasonCode? reason, List<PatternNote> notes = const []}) =>
         ActivityObservation(
             activity: ActivityId.nameResponse,
             status: s,
@@ -95,26 +101,34 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
             attempt: c.attempt,
             durationMs: c.durationMs);
 
-    if (!camera.usable) return result(ActivityStatus.insufficient, reason: camera.reason);
+    if (!camera.usable)
+      return result(ActivityStatus.insufficient, reason: camera.reason);
     if (valid.length >= P.minValidTrialsForPattern) {
       return result(ActivityStatus.valid,
-          notes: responded.isEmpty ? const [PatternNote.nameNoOrienting] : const []);
+          notes: responded.isEmpty
+              ? const [PatternNote.nameNoOrienting]
+              : const []);
     }
     if (trials.isNotEmpty &&
         trials.every((t) => t.reason == ReasonCode.notAttendingBeforePrompt)) {
-      return result(ActivityStatus.nonParticipation, reason: ReasonCode.noParticipation);
+      return result(ActivityStatus.nonParticipation,
+          reason: ReasonCode.noParticipation);
     }
     return result(ActivityStatus.insufficient,
-        reason: c.endedBy ?? _dominantReason(trials) ?? ReasonCode.tooFewValidTrials);
+        reason: c.endedBy ??
+            _dominantReason(trials) ??
+            ReasonCode.tooFewValidTrials);
   }
 
   TrialResult _trial(ActivityCapture c, List<ActivityEvent> group) {
     final index = group.first.get<int>('index');
-    TrialResult invalid(ReasonCode r) => TrialResult(index, TrialStatus.invalid, reason: r);
+    TrialResult invalid(ReasonCode r) =>
+        TrialResult(index, TrialStatus.invalid, reason: r);
     if (firstOf(group, attentionTimeout) != null) {
       return invalid(ReasonCode.notAttendingBeforePrompt);
     }
-    if (firstOf(group, callTimeout) != null) return invalid(ReasonCode.callNotDetected);
+    if (firstOf(group, callTimeout) != null)
+      return invalid(ReasonCode.callNotDetected);
     final callEvent = firstOf(group, call);
     if (callEvent == null) return invalid(c.endedBy ?? ReasonCode.stoppedEarly);
     final tCall = callEvent.tMs;
@@ -122,7 +136,8 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
 
     final pre = framesBetween(c.frames, tCall - P.nameAttentionMs, tCall);
     final preUsable = pre.where(usableFaceFrame).toList();
-    if (pre.isEmpty || preUsable.length / pre.length < 0.6) {
+    if (pre.isEmpty ||
+        preUsable.length / pre.length < P.nameMinAttentionFraction) {
       return invalid(ReasonCode.notAttendingBeforePrompt);
     }
     final baseline = median(preUsable.map((f) => f.face!.yawDeg))!;
@@ -134,7 +149,8 @@ class NameResponseAnalyzer implements ActivityAnalyzer {
     final response = detectOrientingTurn(window, baseline);
     if (response == null) {
       final usable = window.where(usableFaceFrame).length;
-      if (window.isEmpty || usable / window.length < P.minFaceFractionInWindow) {
+      if (window.isEmpty ||
+          usable / window.length < P.minFaceFractionInWindow) {
         return invalid(ReasonCode.faceLostWithoutTurn);
       }
     }

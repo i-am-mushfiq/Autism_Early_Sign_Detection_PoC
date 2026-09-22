@@ -91,7 +91,8 @@ enum VisionMode { off, face, pose }
 
 /// Loudness summary of one 100 ms microphone window.
 class AudioLevel {
-  const AudioLevel({required this.tMs, required this.rmsDb, required this.peakDb});
+  const AudioLevel(
+      {required this.tMs, required this.rmsDb, required this.peakDb});
   final int tMs;
   final double rmsDb, peakDb;
 }

@@ -16,7 +16,6 @@ import 'prototype_parameters.dart';
 import 'quality.dart';
 import 'samples.dart';
 
-
 enum CalibrationTarget { center, left, right, upper }
 
 enum GazeRegion { left, center, right, uncertain }
@@ -46,12 +45,11 @@ class CalibrationResult {
   final Map<CalibrationTarget, int> samples;
   final double? verticalSeparationDeg;
 
-  double? get separationDeg => leftYaw == null || rightYaw == null
-      ? null
-      : (leftYaw! - rightYaw!).abs();
+  double? get separationDeg =>
+      leftYaw == null || rightYaw == null ? null : (leftYaw! - rightYaw!).abs();
 
-  static const notRun = CalibrationResult(
-      usable: false, reason: ReasonCode.gazeNotCalibrated);
+  static const notRun =
+      CalibrationResult(usable: false, reason: ReasonCode.gazeNotCalibrated);
 
   Map<String, Object?> toJson() => {
         'usable': usable,
@@ -82,7 +80,8 @@ class CalibrationResult {
       );
 
   ModalityQuality get quality => usable
-      ? ModalityQuality(Modality.gaze, QualityStatus.valid, value: separationDeg)
+      ? ModalityQuality(Modality.gaze, QualityStatus.valid,
+          value: separationDeg)
       : ModalityQuality(Modality.gaze, QualityStatus.excluded,
           reason: reason ?? ReasonCode.gazeCalibrationUnusable,
           value: separationDeg);
@@ -97,8 +96,8 @@ class GazeCalibrator {
     final pitchByTarget = <CalibrationTarget, List<double>>{};
     var dark = 0, total = 0;
     for (final stage in stages) {
-      final window =
-          framesBetween(frames, stage.startMs + P.calibrationSettleMs, stage.endMs);
+      final window = framesBetween(
+          frames, stage.startMs + P.calibrationSettleMs, stage.endMs);
       total += window.length;
       for (final f in window) {
         if (f.lighting < P.minLighting) dark++;
@@ -135,7 +134,9 @@ class GazeCalibrator {
     double? vertical;
     final up = pitchByTarget[CalibrationTarget.upper];
     if (up != null && up.length >= P.minSamplesPerCalibrationTarget) {
-      vertical = (median(up)! - median(pitchByTarget[CalibrationTarget.center]!)!).abs();
+      vertical =
+          (median(up)! - median(pitchByTarget[CalibrationTarget.center]!)!)
+              .abs();
     }
 
     ReasonCode? reason;
@@ -176,7 +177,8 @@ class CoarseGazeClassifier {
       GazeRegion.center: (yaw - calibration.centerYaw!).abs(),
       GazeRegion.right: (yaw - calibration.rightYaw!).abs(),
     };
-    final sorted = d.entries.toList()..sort((a, b) => a.value.compareTo(b.value));
+    final sorted = d.entries.toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
     final margin = (calibration.noiseDeg ?? 0) * 0.5;
     if (sorted[1].value - sorted[0].value < margin) return GazeRegion.uncertain;
     return sorted[0].key;

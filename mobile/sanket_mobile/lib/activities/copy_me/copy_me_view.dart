@@ -38,31 +38,47 @@ class CopyMeBoard extends StatelessWidget {
         switch (c.copyPhase) {
           case CopyPhase.framing:
           case CopyPhase.between:
-            content = Center(child: FittedBox(child: GuideFigure(size: 160, phase: phase)));
+            content = Center(
+                child: FittedBox(child: GuideFigure(size: 160, phase: phase)));
           case CopyPhase.demo:
             banner = BoardBanner(text: s(T.copyWatch));
             content = Center(
-                child: FittedBox(child: GuideFigure(size: 170, arms: _arms(c.action), phase: phase, talking: true)));
+                child: FittedBox(
+                    child: GuideFigure(
+                        size: 170,
+                        arms: _arms(c.action),
+                        phase: phase,
+                        talking: true)));
           case CopyPhase.window:
-            banner = BoardBanner(text: '${s(T.copyYourTurn)} ${s(copyActionLabel(c.action))}', emphasis: true);
+            banner = BoardBanner(
+                text: '${s(T.copyYourTurn)} ${s(copyActionLabel(c.action))}',
+                emphasis: true);
             content = Center(
                 child: Opacity(
-                    opacity: .55, child: FittedBox(child: GuideFigure(size: 150, arms: _arms(c.action), phase: phase))));
+                    opacity: .55,
+                    child: FittedBox(
+                        child: GuideFigure(
+                            size: 150, arms: _arms(c.action), phase: phase))));
           case CopyPhase.feedback:
-            content = Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+            content = Center(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
               const Mascot('excited', height: 150),
               const SizedBox(height: 8),
               StatusPill(text: s(T.reward)),
             ]));
         }
-        return ActivityBoard(colors: const [Color(0xffffe3c7), Color(0xfffdf6d8)], banner: banner, child: content);
+        return ActivityBoard(
+            colors: const [Color(0xffffe3c7), Color(0xfffdf6d8)],
+            banner: banner,
+            child: content);
       },
     );
   }
 }
 
 class CopyMePanel extends StatelessWidget {
-  const CopyMePanel({super.key, required this.controller, required this.name, this.preview});
+  const CopyMePanel(
+      {super.key, required this.controller, required this.name, this.preview});
   final CopyMeController controller;
   final String name;
   final Widget? preview;
@@ -74,43 +90,56 @@ class CopyMePanel extends StatelessWidget {
       animation: controller,
       builder: (context, _) {
         final c = controller;
-        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          StatusPill(text: s(T.stageTryOf, {'n': c.trial.clamp(1, 3), 'total': 3}), background: SanketColors.pale),
-          if (preview != null) ...[
-            const SizedBox(height: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Stack(children: [
-                ConstrainedBox(constraints: const BoxConstraints(maxHeight: 110), child: Center(child: preview)),
-                Positioned(
-                  left: 6,
-                  top: 6,
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
-                    child: Icon(c.framed ? Icons.check_circle : Icons.crop_free,
-                        size: 20, color: c.framed ? const Color(0xff7ff1b1) : Colors.white),
-                  ),
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              StatusPill(
+                  text: s(T.stageTryOf, {'n': c.trial.clamp(1, 3), 'total': 3}),
+                  background: SanketColors.pale),
+              if (preview != null) ...[
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Stack(children: [
+                    ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 110),
+                        child: Center(child: preview)),
+                    Positioned(
+                      left: 6,
+                      top: 6,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
+                            color: Colors.black54, shape: BoxShape.circle),
+                        child: Icon(
+                            c.framed ? Icons.check_circle : Icons.crop_free,
+                            size: 20,
+                            color: c.framed
+                                ? const Color(0xff7ff1b1)
+                                : Colors.white),
+                      ),
+                    ),
+                  ]),
                 ),
-              ]),
-            ),
-          ],
-          if (c.copyPhase == CopyPhase.framing && !c.framed)
-            IconNote(
-                icon: Icons.open_with,
-                iconColor: SanketColors.warn,
-                color: SanketColors.warnSoft,
-                text: s(T.copyFraming, {'name': name})),
-          if (c.seen != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(children: [
-                const Icon(Icons.visibility, color: SanketColors.leaf, size: 18),
-                const SizedBox(width: 6),
-                Text(s(T.copySeen), style: const TextStyle(fontWeight: FontWeight.w700)),
-              ]),
-            ),
-        ]);
+              ],
+              if (c.copyPhase == CopyPhase.framing && !c.framed)
+                IconNote(
+                    icon: Icons.open_with,
+                    iconColor: SanketColors.warn,
+                    color: SanketColors.warnSoft,
+                    text: s(T.copyFraming, {'name': name})),
+              if (c.seen != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Row(children: [
+                    const Icon(Icons.visibility,
+                        color: SanketColors.leaf, size: 18),
+                    const SizedBox(width: 6),
+                    Text(s(T.copySeen),
+                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                  ]),
+                ),
+            ]);
       },
     );
   }

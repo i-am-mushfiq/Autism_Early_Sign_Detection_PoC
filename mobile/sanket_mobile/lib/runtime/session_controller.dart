@@ -27,6 +27,7 @@ class SessionController extends ChangeNotifier {
     required this.repository,
     required SensorHub Function() sensorFactory,
     required this.permissions,
+    this.allowAutomaticActivityFinish = true,
     DateTime Function()? clock,
     math.Random? random,
   })  : _sensorFactory = sensorFactory,
@@ -37,6 +38,7 @@ class SessionController extends ChangeNotifier {
 
   final SessionRepository repository;
   final PermissionGateway permissions;
+  final bool allowAutomaticActivityFinish;
   final SensorHub Function() _sensorFactory;
   final DateTime Function() _now;
   final math.Random random;
@@ -61,7 +63,8 @@ class SessionController extends ChangeNotifier {
   bool saved = false;
 
   String get childName => profile?.nickname ?? '';
-  ActivityId? get currentActivity => record == null || index >= plan.length ? null : plan[index];
+  ActivityId? get currentActivity =>
+      record == null || index >= plan.length ? null : plan[index];
   bool get sessionFinished => record?.finished ?? false;
 
   Future<void> init() async {
@@ -100,7 +103,8 @@ class SessionController extends ChangeNotifier {
     final p = permissionResult ?? await permissions.current();
     permissionResult = p;
     final a = await sensors.start(
-        camera: p.camera == PermissionState.granted, microphone: p.microphone == PermissionState.granted);
+        camera: p.camera == PermissionState.granted,
+        microphone: p.microphone == PermissionState.granted);
     notifyListeners();
     return a;
   }
@@ -135,9 +139,13 @@ class SessionController extends ChangeNotifier {
       sensors: availability,
       appLanguage: language.name,
     );
-    plan = [for (final d in activityCatalog) if (d.offeredFor(p.ageMonths)) d.id];
+    plan = [
+      for (final d in activityCatalog)
+        if (d.offeredFor(p.ageMonths)) d.id
+    ];
     for (final d in activityCatalog.where((d) => !d.offeredFor(p.ageMonths))) {
-      record!.putObservation(ActivityObservation.skipped(d.id, ReasonCode.notOfferedForAge));
+      record!.putObservation(
+          ActivityObservation.skipped(d.id, ReasonCode.notOfferedForAge));
     }
     index = 0;
     _attempts.clear();
@@ -175,6 +183,7 @@ class SessionController extends ChangeNotifier {
       calibration: record?.calibration ?? CalibrationResult.notRun,
       profile: profile!,
       attempt: attempt,
+      allowAutomaticFinish: allowAutomaticActivityFinish,
       random: random,
     );
     return switch (id) {
@@ -194,7 +203,8 @@ class SessionController extends ChangeNotifier {
     r.putObservation(o);
     if (o.status == ActivityStatus.nonParticipation) {
       _disengagedInRow++;
-    } else if (o.status == ActivityStatus.valid || o.status == ActivityStatus.insufficient) {
+    } else if (o.status == ActivityStatus.valid ||
+        o.status == ActivityStatus.insufficient) {
       _disengagedInRow = 0;
     }
     breakSuggested = _disengagedInRow >= P.disengagedActivitiesBeforeBreak;
@@ -213,8 +223,9 @@ class SessionController extends ChangeNotifier {
   void skipCurrent() {
     final id = currentActivity;
     if (id == null) return;
-    completeActivity(ActivityObservation.skipped(id, ReasonCode.skippedByCaregiver)
-        .copyWith(attempt: attemptsOf(id)));
+    completeActivity(
+        ActivityObservation.skipped(id, ReasonCode.skippedByCaregiver)
+            .copyWith(attempt: attemptsOf(id)));
     advance();
   }
 
@@ -230,13 +241,15 @@ class SessionController extends ChangeNotifier {
 
   /// Ends the session exactly once. Repeated calls (double taps, the time
   /// limit firing during a stop) return the same future and save once.
-  Future<void> finalize(SessionStatus status) => _finalizing ??= _finalize(status);
+  Future<void> finalize(SessionStatus status) =>
+      _finalizing ??= _finalize(status);
 
   Future<void> _finalize(SessionStatus status) async {
     final r = record!;
     _timeLimit?.cancel();
-    final missingReason =
-        status == SessionStatus.timeLimit ? ReasonCode.sessionTimeLimit : ReasonCode.stoppedEarly;
+    final missingReason = status == SessionStatus.timeLimit
+        ? ReasonCode.sessionTimeLimit
+        : ReasonCode.stoppedEarly;
     for (final id in plan) {
       if (!r.observations.any((o) => o.activity == id)) {
         r.putObservation(ActivityObservation.skipped(id, missingReason));

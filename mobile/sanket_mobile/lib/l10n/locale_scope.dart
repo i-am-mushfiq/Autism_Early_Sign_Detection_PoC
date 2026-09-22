@@ -48,7 +48,8 @@ class Strings {
   String dateTime(DateTime d) {
     final l = d.toLocal();
     String two(int v) => v.toString().padLeft(2, '0');
-    return digits('${l.year}-${two(l.month)}-${two(l.day)} ${two(l.hour)}:${two(l.minute)}');
+    return digits(
+        '${l.year}-${two(l.month)}-${two(l.day)} ${two(l.hour)}:${two(l.minute)}');
   }
 
   String seconds(num ms) => number(ms / 1000, decimals: 1);
@@ -133,7 +134,8 @@ class Strings {
         ContextFactor.motorDifficulty => T.factorMotor,
       });
 
-  String reason(ReasonCode r, String name) => call(reasonKey(r), {'name': name});
+  String reason(ReasonCode r, String name) =>
+      call(reasonKey(r), {'name': name});
 
   static T reasonKey(ReasonCode r) => switch (r) {
         ReasonCode.cameraUnavailable => T.rCameraUnavailable,
@@ -148,7 +150,8 @@ class Strings {
         ReasonCode.gazeNotCalibrated => T.rGazeNotCalibrated,
         ReasonCode.gazeCalibrationUnusable => T.rGazeCalibrationUnusable,
         ReasonCode.calibrationTooFewSamples => T.rCalibrationTooFewSamples,
-        ReasonCode.calibrationTargetsNotSeparable => T.rCalibrationTargetsNotSeparable,
+        ReasonCode.calibrationTargetsNotSeparable =>
+          T.rCalibrationTargetsNotSeparable,
         ReasonCode.calibrationUnstable => T.rCalibrationUnstable,
         ReasonCode.microphoneUnavailable => T.rMicrophoneUnavailable,
         ReasonCode.microphonePermissionDenied => T.rMicrophonePermissionDenied,
@@ -183,7 +186,8 @@ class LocaleScope extends InheritedWidget {
       const Strings(AppLanguage.en);
 
   @override
-  bool updateShouldNotify(LocaleScope oldWidget) => oldWidget.strings.language != strings.language;
+  bool updateShouldNotify(LocaleScope oldWidget) =>
+      oldWidget.strings.language != strings.language;
 }
 
 extension LocalizedContext on BuildContext {

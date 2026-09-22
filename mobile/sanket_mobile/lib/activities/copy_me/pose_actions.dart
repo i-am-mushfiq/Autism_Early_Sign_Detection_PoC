@@ -43,7 +43,8 @@ class PoseActionDetector {
     final rw = pose.reliable(PosePoint.rightWrist, _min);
 
     bool above(PoseLandmark w, double ratio) => nose.y - w.y >= ratio * unit;
-    if (lw != null && rw != null &&
+    if (lw != null &&
+        rw != null &&
         above(lw, P.handsUpAboveNoseRatio) &&
         above(rw, P.handsUpAboveNoseRatio) &&
         _dist(lw, rw) > P.clapOpenRatio * unit) {

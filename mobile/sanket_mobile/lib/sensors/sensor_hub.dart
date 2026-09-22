@@ -35,7 +35,8 @@ abstract class SensorHub {
   SensorAvailability get availability;
 
   /// Starts the sensors the caregiver allowed. Safe to call again.
-  Future<SensorAvailability> start({required bool camera, required bool microphone});
+  Future<SensorAvailability> start(
+      {required bool camera, required bool microphone});
 
   /// Which detector runs on camera frames. [VisionMode.off] emits no frames.
   VisionMode get mode;
@@ -49,6 +50,10 @@ abstract class SensorHub {
 
   /// A live camera preview for the caregiver, or null without a camera.
   Widget? preview();
+
+  /// Reopens orientation-sensitive platform sensors after the UI rotates.
+  /// Test and non-camera hubs can keep the default no-op implementation.
+  Future<void> refreshAfterOrientationChange() async {}
 
   Future<void> dispose();
 }

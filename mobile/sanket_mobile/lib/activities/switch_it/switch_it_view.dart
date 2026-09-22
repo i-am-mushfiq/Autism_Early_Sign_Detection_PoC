@@ -28,17 +28,21 @@ class SwitchItBoard extends StatelessWidget {
             child: const Center(child: _Item(item: SwitchRule.ball, size: 170)),
           );
         }
-        final prompt = s(c.rule == SwitchRule.bird ? T.switchTapBird : T.switchTapBall);
+        final prompt =
+            s(c.rule == SwitchRule.bird ? T.switchTapBird : T.switchTapBall);
         Widget card(SwitchRule item) => Expanded(
               child: Semantics(
                 button: true,
-                label: s(item == SwitchRule.bird ? T.switchTapBird : T.switchTapBall),
+                label: s(item == SwitchRule.bird
+                    ? T.switchTapBird
+                    : T.switchTapBall),
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => c.tap(item),
                   child: Center(
                     child: AnimatedScale(
-                      scale: c.chosen == item ? 1.15 : (c.chosen != null ? .9 : 1),
+                      scale:
+                          c.chosen == item ? 1.15 : (c.chosen != null ? .9 : 1),
                       duration: const Duration(milliseconds: 180),
                       child: _Item(item: item, size: 150),
                     ),
@@ -74,7 +78,10 @@ class _Item extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
-          boxShadow: [BoxShadow(color: Color(0x22000000), blurRadius: 10, offset: Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+                color: Color(0x22000000), blurRadius: 10, offset: Offset(0, 4))
+          ],
         ),
         child: item == SwitchRule.bird
             ? const FittedBox(child: Mascot('happy', height: 200))
@@ -92,8 +99,10 @@ class _BallPainter extends CustomPainter {
       ..color = const Color(0xfff7c948)
       ..style = PaintingStyle.stroke
       ..strokeWidth = r * .28;
-    canvas.drawArc(Rect.fromCircle(center: c, radius: r * .62), -.6, 2.4, false, band);
-    canvas.drawCircle(c.translate(-r * .35, -r * .4), r * .16, Paint()..color = Colors.white.withOpacity(.7));
+    canvas.drawArc(
+        Rect.fromCircle(center: c, radius: r * .62), -.6, 2.4, false, band);
+    canvas.drawCircle(c.translate(-r * .35, -r * .4), r * .16,
+        Paint()..color = Colors.white.withOpacity(.7));
   }
 
   @override

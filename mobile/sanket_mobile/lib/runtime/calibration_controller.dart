@@ -15,7 +15,8 @@ enum CalibrationPhase { intro, waitingForFace, running, done }
 /// shows the star at four targets while collecting real head-orientation
 /// samples, then evaluates them with [GazeCalibrator].
 class CalibrationController extends ChangeNotifier {
-  CalibrationController(this.sensors, {this.calibrator = const GazeCalibrator()});
+  CalibrationController(this.sensors,
+      {this.calibrator = const GazeCalibrator()});
   final SensorHub sensors;
   final GazeCalibrator calibrator;
 
@@ -40,7 +41,8 @@ class CalibrationController extends ChangeNotifier {
   int _stageStart = 0;
   bool _disposed = false;
 
-  bool get canRetry => attempts < P.maxCalibrationAttempts && sensors.availability.camera;
+  bool get canRetry =>
+      attempts < P.maxCalibrationAttempts && sensors.availability.camera;
   int get stageIndex => _stageIndex;
 
   /// Share of recent frames with a usable face, for live caregiver feedback.
@@ -52,7 +54,8 @@ class CalibrationController extends ChangeNotifier {
   }
 
   void start() {
-    if (phase == CalibrationPhase.waitingForFace || phase == CalibrationPhase.running) return;
+    if (phase == CalibrationPhase.waitingForFace ||
+        phase == CalibrationPhase.running) return;
     attempts++;
     _frames.clear();
     _stages.clear();
@@ -60,14 +63,16 @@ class CalibrationController extends ChangeNotifier {
     _stageIndex = 0;
     target = null;
     if (!sensors.availability.camera) {
-      _complete(const CalibrationResult(usable: false, reason: ReasonCode.cameraUnavailable));
+      _complete(const CalibrationResult(
+          usable: false, reason: ReasonCode.cameraUnavailable));
       return;
     }
     sensors.mode = VisionMode.face;
     _sub = sensors.frames.listen(_onFrame);
     phase = CalibrationPhase.waitingForFace;
     // If the face never appears, run anyway: the evaluation reports why it failed.
-    _timer = Timer(const Duration(milliseconds: P.calibrationFaceWaitMs), _beginStages);
+    _timer = Timer(
+        const Duration(milliseconds: P.calibrationFaceWaitMs), _beginStages);
     _notify();
   }
 
@@ -90,7 +95,8 @@ class CalibrationController extends ChangeNotifier {
   void _nextStage() {
     final now = sensors.clock.nowMs();
     if (_stageIndex > 0) {
-      _stages.add(CalibrationStage(sequence[_stageIndex - 1], _stageStart, now));
+      _stages
+          .add(CalibrationStage(sequence[_stageIndex - 1], _stageStart, now));
     }
     if (_stageIndex >= sequence.length) {
       _sub?.cancel();
@@ -101,7 +107,8 @@ class CalibrationController extends ChangeNotifier {
     target = sequence[_stageIndex];
     _stageStart = now;
     _stageIndex++;
-    _timer = Timer(const Duration(milliseconds: P.calibrationStageMs), _nextStage);
+    _timer =
+        Timer(const Duration(milliseconds: P.calibrationStageMs), _nextStage);
     _notify();
   }
 
