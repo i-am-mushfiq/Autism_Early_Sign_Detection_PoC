@@ -29,7 +29,9 @@ class SwitchItAnalyzer implements ActivityAnalyzer {
       final r = firstOf(g, response);
       if (r == null) {
         trials.add(TrialResult(index, TrialStatus.invalid,
-            reason: firstOf(g, omission) != null ? ReasonCode.noResponses : (c.endedBy ?? ReasonCode.stoppedEarly),
+            reason: firstOf(g, omission) != null
+                ? ReasonCode.noResponses
+                : (c.endedBy ?? ReasonCode.stoppedEarly),
             measures: {'rule': rule}));
         continue;
       }
@@ -41,44 +43,65 @@ class SwitchItAnalyzer implements ActivityAnalyzer {
       }));
     }
 
-    List<TrialResult> responses(SwitchRule rule) =>
-        [for (final t in trials) if (t.valid && t.measures['rule'] == rule.name) t];
+    List<TrialResult> responses(SwitchRule rule) => [
+          for (final t in trials)
+            if (t.valid && t.measures['rule'] == rule.name) t
+        ];
     final pre = responses(SwitchRule.bird);
     final post = responses(SwitchRule.ball);
     final allResponses = [...pre, ...post];
-    double? accuracy(List<TrialResult> ts) =>
-        ts.isEmpty ? null : ts.where((t) => t.measures['correct'] == true).length / ts.length;
-    List<int> correctRts(List<TrialResult> ts) =>
-        [for (final t in ts) if (t.measures['correct'] == true) t.measures['rtMs'] as int];
+    double? accuracy(List<TrialResult> ts) => ts.isEmpty
+        ? null
+        : ts.where((t) => t.measures['correct'] == true).length / ts.length;
+    List<int> correctRts(List<TrialResult> ts) => [
+          for (final t in ts)
+            if (t.measures['correct'] == true) t.measures['rtMs'] as int
+        ];
 
-    final perseverative = post.where((t) => t.measures['chosen'] == SwitchRule.bird.name).length;
+    final perseverative =
+        post.where((t) => t.measures['chosen'] == SwitchRule.bird.name).length;
     final preRt = correctRts(pre), postRt = correctRts(post);
     final allRt = [for (final t in allResponses) t.measures['rtMs'] as int];
     final rtMean = mean(allRt), rtSd = standardDeviation(allRt);
-    final omissions = trials.where((t) => t.reason == ReasonCode.noResponses).length;
+    final omissions =
+        trials.where((t) => t.reason == ReasonCode.noResponses).length;
 
     final enough = pre.length >= P.switchMinResponsesPerRule &&
         post.length >= P.switchMinResponsesPerRule;
     final rel = enough ? Reliability.adequate : Reliability.limited;
     final features = <Feature>[
-      Feature('responses', allResponses.length.toDouble(), Modality.touch, unit: 'count'),
+      Feature('responses', allResponses.length.toDouble(), Modality.touch,
+          unit: 'count'),
       Feature('omissions', omissions.toDouble(), Modality.touch, unit: 'count'),
       if (accuracy(pre) != null)
-        Feature('accuracy_before_switch', accuracy(pre)!, Modality.touch, unit: 'ratio', reliability: rel),
+        Feature('accuracy_before_switch', accuracy(pre)!, Modality.touch,
+            unit: 'ratio', reliability: rel),
       if (accuracy(post) != null)
-        Feature('accuracy_after_switch', accuracy(post)!, Modality.touch, unit: 'ratio', reliability: rel),
+        Feature('accuracy_after_switch', accuracy(post)!, Modality.touch,
+            unit: 'ratio', reliability: rel),
       if (post.isNotEmpty)
-        Feature('perseverative_taps', perseverative.toDouble(), Modality.touch, unit: 'count', reliability: rel),
+        Feature('perseverative_taps', perseverative.toDouble(), Modality.touch,
+            unit: 'count', reliability: rel),
       if (preRt.length >= 2 && postRt.length >= 2)
-        Feature('switch_cost_ms', median(postRt)! - median(preRt)!, Modality.touch,
+        Feature(
+            'switch_cost_ms', median(postRt)! - median(preRt)!, Modality.touch,
             unit: 'ms', reliability: Reliability.limited),
       if (rtMean != null && rtSd != null && allRt.length >= 3 && rtMean > 0)
-        Feature('reaction_time_cv', rtSd / rtMean, Modality.touch, unit: 'ratio', reliability: rel),
+        Feature('reaction_time_cv', rtSd / rtMean, Modality.touch,
+            unit: 'ratio', reliability: rel),
     ];
     final touch = ModalityQuality(
         Modality.touch,
-        allResponses.isEmpty ? QualityStatus.excluded : enough ? QualityStatus.valid : QualityStatus.limited,
-        reason: allResponses.isEmpty ? ReasonCode.noTouches : enough ? null : ReasonCode.tooFewResponses,
+        allResponses.isEmpty
+            ? QualityStatus.excluded
+            : enough
+                ? QualityStatus.valid
+                : QualityStatus.limited,
+        reason: allResponses.isEmpty
+            ? ReasonCode.noTouches
+            : enough
+                ? null
+                : ReasonCode.tooFewResponses,
         value: allResponses.length.toDouble());
 
     final status = allResponses.isEmpty

@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart' hide PoseLandmark;
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart'
+    hide PoseLandmark;
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 import '../core/activity_capture.dart';
@@ -20,12 +21,14 @@ class DevicePermissionGateway implements PermissionGateway {
 
   @override
   Future<PermissionResult> current() async => PermissionResult(
-      _map(await ph.Permission.camera.status), _map(await ph.Permission.microphone.status));
+      _map(await ph.Permission.camera.status),
+      _map(await ph.Permission.microphone.status));
 
   @override
   Future<PermissionResult> request() async {
     final r = await [ph.Permission.camera, ph.Permission.microphone].request();
-    return PermissionResult(_map(r[ph.Permission.camera]!), _map(r[ph.Permission.microphone]!));
+    return PermissionResult(
+        _map(r[ph.Permission.camera]!), _map(r[ph.Permission.microphone]!));
   }
 
   @override
@@ -48,8 +51,9 @@ class DeviceSensorHub implements SensorHub {
   CameraController? _controller;
   CameraDescription? _camera;
   final _frames = StreamController<VisionFrame>.broadcast();
-  late final StreamController<AudioLevel> _audio = StreamController<AudioLevel>.broadcast(
-      onListen: _startAudio, onCancel: _stopAudio);
+  late final StreamController<AudioLevel> _audio =
+      StreamController<AudioLevel>.broadcast(
+          onListen: _startAudio, onCancel: _stopAudio);
   StreamSubscription<dynamic>? _audioSub;
 
   final _faceDetector = FaceDetector(
@@ -75,7 +79,8 @@ class DeviceSensorHub implements SensorHub {
     _mode = value;
     if (value == VisionMode.pose) {
       _poseDetector ??= PoseDetector(
-          options: PoseDetectorOptions(mode: PoseDetectionMode.stream, model: PoseDetectionModel.base));
+          options: PoseDetectorOptions(
+              mode: PoseDetectionMode.stream, model: PoseDetectionModel.base));
     }
   }
 
@@ -85,18 +90,21 @@ class DeviceSensorHub implements SensorHub {
   Stream<AudioLevel> get audio => _audio.stream;
 
   @override
-  Future<SensorAvailability> start({required bool camera, required bool microphone}) async {
+  Future<SensorAvailability> start(
+      {required bool camera, required bool microphone}) async {
     _microphoneAllowed = microphone;
     var cameraOk = _controller?.value.isInitialized ?? false;
     if (camera && !cameraOk) {
       try {
         final cameras = await availableCameras();
-        final front = cameras.where((c) => c.lensDirection == CameraLensDirection.front);
+        final front =
+            cameras.where((c) => c.lensDirection == CameraLensDirection.front);
         _camera = front.isNotEmpty ? front.first : cameras.first;
         final controller = CameraController(_camera!, ResolutionPreset.medium,
             enableAudio: false,
-            imageFormatGroup:
-                defaultTargetPlatform == TargetPlatform.android ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888);
+            imageFormatGroup: defaultTargetPlatform == TargetPlatform.android
+                ? ImageFormatGroup.nv21
+                : ImageFormatGroup.bgra8888);
         await controller.initialize();
         _controller = controller;
         await controller.startImageStream(_onImage);
@@ -106,7 +114,8 @@ class DeviceSensorHub implements SensorHub {
         cameraOk = false;
       }
     }
-    _availability = SensorAvailability(camera: cameraOk, microphone: microphone);
+    _availability =
+        SensorAvailability(camera: cameraOk, microphone: microphone);
     return _availability;
   }
 
@@ -115,6 +124,24 @@ class DeviceSensorHub implements SensorHub {
     final c = _controller;
     if (c == null || !c.value.isInitialized) return null;
     return CameraPreview(c);
+  }
+
+  @override
+  Future<void> refreshAfterOrientationChange() async {
+    final c = _controller;
+    if (c == null || !c.value.isInitialized) return;
+    final reopenCamera = _availability.camera;
+    _controller = null;
+    _camera = null;
+    _mode = VisionMode.off;
+    try {
+      if (c.value.isStreamingImages) await c.stopImageStream();
+    } catch (_) {}
+    await c.dispose();
+    // The platform orientation request completes before the camera plugin has
+    // necessarily received the new display rotation.
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    await start(camera: reopenCamera, microphone: _microphoneAllowed);
   }
 
   void _startAudio() {
@@ -127,7 +154,8 @@ class DeviceSensorHub implements SensorHub {
           peakDb: (m['peakDb'] as num).toDouble()));
     }, onError: (Object e) {
       debugPrint('Sanket microphone stream error: $e');
-      _availability = SensorAvailability(camera: _availability.camera, microphone: false);
+      _availability =
+          SensorAvailability(camera: _availability.camera, microphone: false);
     });
   }
 
@@ -138,15 +166,17 @@ class DeviceSensorHub implements SensorHub {
 
   Future<void> _onImage(CameraImage image) async {
     final now = clock.nowMs();
-    if (_busy || _mode == VisionMode.off || now - _lastFrameMs < _minFrameGapMs) return;
+    if (_busy || _mode == VisionMode.off || now - _lastFrameMs < _minFrameGapMs)
+      return;
     _busy = true;
     _lastFrameMs = now;
     try {
       final lighting = _meanLuma(image);
       final input = _inputImage(image);
       if (input == null) return;
-      final rotated = input.metadata!.rotation == InputImageRotation.rotation90deg ||
-          input.metadata!.rotation == InputImageRotation.rotation270deg;
+      final rotated =
+          input.metadata!.rotation == InputImageRotation.rotation90deg ||
+              input.metadata!.rotation == InputImageRotation.rotation270deg;
       final width = (rotated ? image.height : image.width).toDouble();
       final height = (rotated ? image.width : image.height).toDouble();
       FaceObservation? face;
@@ -156,7 +186,10 @@ class DeviceSensorHub implements SensorHub {
         final faces = await _faceDetector.processImage(input);
         if (faces.isNotEmpty) {
           final f = faces.reduce((a, b) =>
-              a.boundingBox.width * a.boundingBox.height >= b.boundingBox.width * b.boundingBox.height ? a : b);
+              a.boundingBox.width * a.boundingBox.height >=
+                      b.boundingBox.width * b.boundingBox.height
+                  ? a
+                  : b);
           face = FaceObservation(
             yawDeg: f.headEulerAngleY ?? 0,
             pitchDeg: f.headEulerAngleX ?? 0,
@@ -185,13 +218,14 @@ class DeviceSensorHub implements SensorHub {
           pose = PoseObservation({
             for (final e in map.entries)
               if (landmarks[e.key] != null)
-                e.value: PoseLandmark(landmarks[e.key]!.x / width, landmarks[e.key]!.y / width,
-                    landmarks[e.key]!.likelihood)
+                e.value: PoseLandmark(landmarks[e.key]!.x / width,
+                    landmarks[e.key]!.y / width, landmarks[e.key]!.likelihood)
           });
         }
       }
       if (!_frames.isClosed) {
-        _frames.add(VisionFrame(tMs: now, mode: mode, lighting: lighting, face: face, pose: pose));
+        _frames.add(VisionFrame(
+            tMs: now, mode: mode, lighting: lighting, face: face, pose: pose));
       }
     } catch (e) {
       debugPrint('Sanket frame processing failed: $e');
@@ -233,7 +267,9 @@ class DeviceSensorHub implements SensorHub {
     final Uint8List bytes;
     final InputImageFormat format;
     if (defaultTargetPlatform == TargetPlatform.android) {
-      bytes = image.planes.length == 1 ? image.planes.first.bytes : _yuv420ToNv21(image);
+      bytes = image.planes.length == 1
+          ? image.planes.first.bytes
+          : _yuv420ToNv21(image);
       format = InputImageFormat.nv21;
     } else {
       bytes = image.planes.first.bytes;

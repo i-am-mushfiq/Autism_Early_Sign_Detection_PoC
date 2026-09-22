@@ -14,7 +14,7 @@ library;
 class PrototypeParameters {
   const PrototypeParameters._();
 
-  static const rulesVersion = 'sanket-prototype-rules-v1';
+  static const rulesVersion = 'sanket-prototype-rules-v2';
 
   // ── Session ────────────────────────────────────────────────────────────
   /// Spec §10: "Maximum session duration is enforced." Activities stage only.
@@ -83,7 +83,15 @@ class PrototypeParameters {
   static const socialStorySegmentMs = 20000;
 
   /// Fraction of segment samples that must be classified to a side.
-  static const minClassifiedFractionPerSegment = 0.45;
+  ///
+  /// Unlike the cued activities (Follow My Look only needs the gaze to settle
+  /// on a side for two frames right after a cue), this counts classified
+  /// frames across the whole ~20s free-viewing segment, where a child looking
+  /// at center, blinking, or glancing off-screen is expected and normal. The
+  /// same calibration noise that lets Follow My Look pass easily still marks
+  /// many of those in-between moments "uncertain" here, so this bar is kept
+  /// well under half rather than matching a cued-response threshold.
+  static const minClassifiedFractionPerSegment = 0.3;
 
   // ── Activity: Name Response ───────────────────────────────────────────
   static const nameTrials = 3;
@@ -92,6 +100,21 @@ class PrototypeParameters {
   /// The child must be facing the screen for this long before the prompt.
   static const nameAttentionMs = 1500;
   static const nameAttentionTimeoutMs = 9000;
+
+  /// A gap this short between facing frames does not reset the sustained-
+  /// attention streak above. Real face tracking drops a frame here and there
+  /// (a blink, a momentary tracker miss) even while the child keeps looking;
+  /// without tolerance a single dropped frame restarts the whole 1.5s streak
+  /// and the trial almost never reaches it before timing out.
+  static const nameAttentionGapToleranceMs = 350;
+
+  /// Fraction of the pre-call window that must be usable face frames for the
+  /// trial to count as "attending". The live attention gate above already
+  /// requires sustained facing before the prompt starts; this only re-checks
+  /// the moments right before the caregiver's actual call (which can land a
+  /// few seconds after the prompt), so it is deliberately looser than a
+  /// "mostly attending" bar.
+  static const nameMinAttentionFraction = 0.45;
 
   /// Head yaw (from the calibrated centre, or 0) within which the child counts
   /// as facing the screen before the prompt.

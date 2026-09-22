@@ -6,7 +6,8 @@
 enum T {
   // ── General ──────────────────────────────────────────────────────────
   appName('Sanket', 'সংকেত'),
-  tagline('Early developmental signals,\nnot diagnoses.', 'প্রাথমিক বিকাশের সংকেত,\nরোগনির্ণয় নয়।'),
+  tagline('Early developmental signals,\nnot diagnoses.',
+      'প্রাথমিক বিকাশের সংকেত,\nরোগনির্ণয় নয়।'),
   continueLabel('Continue', 'এগিয়ে যান'),
   back('Back', 'পেছনে'),
   cancel('Cancel', 'বাতিল'),
@@ -21,13 +22,15 @@ enum T {
   welcomeLead(
       'Sanket uses short guided activities to observe selected developmental behaviours. It does not diagnose autism or any other condition.',
       'সংকেত ছোট ছোট নির্দেশিত খেলার মাধ্যমে শিশুর নির্দিষ্ট কিছু বিকাশমূলক আচরণ পর্যবেক্ষণ করে। এটি অটিজম বা অন্য কোনো অবস্থার রোগনির্ণয় করে না।'),
-  welcomeDuration('About 6–8 minutes · for children 18–36 months', 'প্রায় ৬–৮ মিনিট · ১৮–৩৬ মাস বয়সী শিশুদের জন্য'),
+  welcomeDuration('About 6–8 minutes · for children 18–36 months',
+      'প্রায় ৬–৮ মিনিট · ১৮–৩৬ মাস বয়সী শিশুদের জন্য'),
   welcomeStart('Start a guided session', 'নির্দেশিত সেশন শুরু করুন'),
   welcomeHistory('Previous sessions', 'আগের সেশনগুলো'),
   welcomePrivacy(
       'Everything is processed on this phone. No video or audio is recorded, and Sanket never gives a diagnosis.',
       'সবকিছু এই ফোনেই প্রক্রিয়া করা হয়। কোনো ভিডিও বা অডিও রেকর্ড করা হয় না, এবং সংকেত কখনো রোগনির্ণয় দেয় না।'),
-  welcomeCompanionLabel('Sanket’s friendly green bird holding a star', 'তারা হাতে সংকেতের বন্ধু সবুজ পাখি'),
+  welcomeCompanionLabel('Sanket’s friendly green bird holding a star',
+      'তারা হাতে সংকেতের বন্ধু সবুজ পাখি'),
 
   // ── Consent ──────────────────────────────────────────────────────────
   consentOverline('Before we begin', 'শুরু করার আগে'),
@@ -43,19 +46,24 @@ enum T {
   consentChoose('Your choices', 'আপনার সিদ্ধান্ত'),
   consentRequired('Required', 'আবশ্যক'),
   consentOptional('Optional', 'ঐচ্ছিক'),
-  consentProcessingTitle('Use the camera and microphone during this session', 'এই সেশনে ক্যামেরা ও মাইক্রোফোন ব্যবহার করুন'),
+  consentProcessingTitle('Use the camera and microphone during this session',
+      'এই সেশনে ক্যামেরা ও মাইক্রোফোন ব্যবহার করুন'),
   consentProcessingBody(
       'Head movement, body position and sound level are measured on this phone while activities run. Nothing is recorded.',
       'কার্যক্রম চলার সময় মাথার নড়াচড়া, শরীরের অবস্থান ও শব্দের মাত্রা এই ফোনেই মাপা হয়। কিছুই রেকর্ড করা হয় না।'),
-  consentStoreTitle('Save session summaries on this phone', 'সেশনের সারাংশ এই ফোনে সংরক্ষণ করুন'),
+  consentStoreTitle('Save session summaries on this phone',
+      'সেশনের সারাংশ এই ফোনে সংরক্ষণ করুন'),
   consentStoreBody(
       'Keeps measurements (never video or audio) so you can see sessions over time. You can delete them at any time.',
       'মাপা তথ্য (কখনো ভিডিও বা অডিও নয়) রাখা হয়, যাতে সময়ের সাথে সেশনগুলো দেখতে পারেন। যেকোনো সময় মুছে ফেলা যায়।'),
-  consentShareTitle('Allow sharing the summary with a professional later', 'পরে কোনো বিশেষজ্ঞের সাথে সারাংশ শেয়ার করার অনুমতি দিন'),
+  consentShareTitle('Allow sharing the summary with a professional later',
+      'পরে কোনো বিশেষজ্ঞের সাথে সারাংশ শেয়ার করার অনুমতি দিন'),
   consentShareBody(
       'This version does not send anything. Your choice is saved, and you will be asked again before anything is shared.',
       'এই সংস্করণ কিছুই পাঠায় না। আপনার সিদ্ধান্ত সংরক্ষিত থাকবে, আর কিছু শেয়ার করার আগে আবার জিজ্ঞেস করা হবে।'),
-  consentResearchTitle('Allow separate research use of de-identified measurements', 'পরিচয়হীন মাপা তথ্য আলাদাভাবে গবেষণায় ব্যবহারের অনুমতি দিন'),
+  consentResearchTitle(
+      'Allow separate research use of de-identified measurements',
+      'পরিচয়হীন মাপা তথ্য আলাদাভাবে গবেষণায় ব্যবহারের অনুমতি দিন'),
   consentResearchBody(
       'Completely separate from your session result. This version does not send anything.',
       'এটি আপনার সেশনের ফলাফল থেকে সম্পূর্ণ আলাদা। এই সংস্করণ কিছুই পাঠায় না।'),
@@ -63,18 +71,25 @@ enum T {
       'Never: facial identity recognition, background recording, or keeping raw video or audio. You can stop at any time.',
       'কখনোই না: মুখ দেখে পরিচয় শনাক্ত করা, পটভূমিতে রেকর্ডিং, বা মূল ভিডিও-অডিও রেখে দেওয়া। আপনি যেকোনো সময় থামাতে পারেন।'),
   consentAgree('I understand and agree', 'আমি বুঝেছি এবং সম্মত'),
-  consentNeedProcessing('Camera and microphone use is required to run the activities.', 'কার্যক্রম চালাতে ক্যামেরা ও মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন।'),
+  consentNeedProcessing(
+      'Camera and microphone use is required to run the activities.',
+      'কার্যক্রম চালাতে ক্যামেরা ও মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন।'),
 
   // ── Profile ──────────────────────────────────────────────────────────
   profileOverline('Baseline context', 'প্রাথমিক তথ্য'),
   profileTitle('Tell us about your child', 'আপনার শিশুর সম্পর্কে বলুন'),
-  profileLead('This helps interpret the observations carefully.', 'এতে পর্যবেক্ষণগুলো সতর্কভাবে বোঝা সহজ হয়।'),
+  profileLead('This helps interpret the observations carefully.',
+      'এতে পর্যবেক্ষণগুলো সতর্কভাবে বোঝা সহজ হয়।'),
   profileName('Familiar name or nickname', 'ডাকনাম'),
-  profileNameHelp('You will call this name out loud during one activity.', 'একটি কার্যক্রমে আপনি এই নাম ধরে ডাকবেন।'),
-  profileNameMissing('Please enter the name you call your child.', 'শিশুকে যে নামে ডাকেন, সেটি লিখুন।'),
+  profileNameHelp('You will call this name out loud during one activity.',
+      'একটি কার্যক্রমে আপনি এই নাম ধরে ডাকবেন।'),
+  profileNameMissing('Please enter the name you call your child.',
+      'শিশুকে যে নামে ডাকেন, সেটি লিখুন।'),
   profileAge('Age in months', 'বয়স (মাসে)'),
-  profileAgeInvalid('Sanket is designed for children aged 18–36 months.', 'সংকেত ১৮–৩৬ মাস বয়সী শিশুদের জন্য তৈরি।'),
-  profilePrimaryLanguage('Language spoken most at home', 'বাড়িতে সবচেয়ে বেশি বলা ভাষা'),
+  profileAgeInvalid('Sanket is designed for children aged 18–36 months.',
+      'সংকেত ১৮–৩৬ মাস বয়সী শিশুদের জন্য তৈরি।'),
+  profilePrimaryLanguage(
+      'Language spoken most at home', 'বাড়িতে সবচেয়ে বেশি বলা ভাষা'),
   profileOtherLanguage('Other language exposure', 'অন্য ভাষার সংস্পর্শ'),
   langBangla('Bangla', 'বাংলা'),
   langEnglish('English', 'ইংরেজি'),
@@ -83,9 +98,12 @@ enum T {
   langOther('Other', 'অন্য'),
   profileHearing('Any known hearing concern?', 'শোনার কোনো জানা সমস্যা আছে?'),
   profileVision('Any known vision concern?', 'দেখার কোনো জানা সমস্যা আছে?'),
-  profileMotor('Any known difficulty moving hands or body?', 'হাত বা শরীর নাড়াতে কোনো জানা অসুবিধা আছে?'),
-  profilePriorConcern('Has anyone raised a developmental concern before?', 'আগে কেউ কি বিকাশ নিয়ে কোনো উদ্বেগ জানিয়েছেন?'),
-  profileScreen('How used to touchscreens is your child?', 'শিশু টাচস্ক্রিনে কতটা অভ্যস্ত?'),
+  profileMotor('Any known difficulty moving hands or body?',
+      'হাত বা শরীর নাড়াতে কোনো জানা অসুবিধা আছে?'),
+  profilePriorConcern('Has anyone raised a developmental concern before?',
+      'আগে কেউ কি বিকাশ নিয়ে কোনো উদ্বেগ জানিয়েছেন?'),
+  profileScreen('How used to touchscreens is your child?',
+      'শিশু টাচস্ক্রিনে কতটা অভ্যস্ত?'),
   screenLow('Rarely', 'কম'),
   screenMedium('Sometimes', 'মাঝে মাঝে'),
   screenHigh('Often', 'প্রায়ই'),
@@ -102,7 +120,8 @@ enum T {
   setupLead(
       'Sit with {name} somewhere quiet with soft, even light. Stand the phone sideways on a stable surface, about an arm’s length away.',
       '{name}-কে নিয়ে নরম, সমান আলোর কোনো শান্ত জায়গায় বসুন। ফোনটি আড়াআড়ি করে প্রায় এক হাত দূরে কোনো স্থির জায়গায় দাঁড় করিয়ে রাখুন।'),
-  setupPermissionTitle('Camera and microphone access', 'ক্যামেরা ও মাইক্রোফোনের অনুমতি'),
+  setupPermissionTitle(
+      'Camera and microphone access', 'ক্যামেরা ও মাইক্রোফোনের অনুমতি'),
   setupPermissionBody(
       'Android will ask for permission. The camera measures head and body movement. The microphone measures only loudness, so Sanket can tell when you call {name}.',
       'অ্যান্ড্রয়েড অনুমতি চাইবে। ক্যামেরা মাথা ও শরীরের নড়াচড়া মাপে। মাইক্রোফোন শুধু শব্দের মাত্রা মাপে, যাতে বোঝা যায় কখন আপনি {name}-কে ডাকছেন।'),
@@ -130,12 +149,74 @@ enum T {
   statusTooClose('Too close', 'খুব কাছে'),
   statusNoisy('Noisy', 'শব্দ বেশি'),
   statusSlow('Too slow', 'খুব ধীর'),
-  setupTipFace('Keep {name}’s face inside the preview.', '{name}-এর মুখ প্রিভিউয়ের মধ্যে রাখুন।'),
+  setupTipFace('Keep {name}’s face inside the preview.',
+      '{name}-এর মুখ প্রিভিউয়ের মধ্যে রাখুন।'),
   setupContinueAnyway(
       'Some checks are not good yet. You can still begin — anything unreliable will be left out, never guessed.',
       'কিছু যাচাই এখনো ভালো নয়। তবুও শুরু করতে পারেন — অনির্ভরযোগ্য কিছু থাকলে তা বাদ দেওয়া হবে, কখনো অনুমান করা হবে না।'),
   setupBegin('Begin activities', 'কার্যক্রম শুরু করুন'),
-  setupRotateHint('The screen turns sideways for the activities.', 'কার্যক্রমের জন্য স্ক্রিন আড়াআড়ি হয়ে যাবে।'),
+  tourBanner(
+      'Demo tour: a simulated child provides the camera and microphone signal. Nothing here needs a real permission — just tap through each screen as usual.',
+      'ডেমো ট্যুর: একটি সিমুলেটেড শিশু ক্যামেরা ও মাইক্রোফোন সংকেত দিচ্ছে। এখানে কোনো প্রকৃত অনুমতির প্রয়োজন নেই — শুধু প্রতিটি স্ক্রিনে স্বাভাবিকভাবে ট্যাপ করে যান।'),
+  tourSetupNote(
+      'The preview below is the simulated child, not a real camera. Tap “I understand” when ready.',
+      'নিচের প্রিভিউটি সিমুলেটেড শিশু, প্রকৃত ক্যামেরা নয়। প্রস্তুত হলে “বুঝেছি” চাপুন।'),
+  tourBegin('I understand — begin', 'বুঝেছি — শুরু করুন'),
+  tourTitle('App tour', 'অ্যাপ ট্যুর'),
+  tourPressActual('Tap “{action}” here.', 'এখানে “{action}” চাপুন।'),
+  tourActualPrivacy(
+      'App tour · Sample profile and simulated activities. No real camera or microphone data; nothing enters your personal history.',
+      'অ্যাপ ট্যুর · উদাহরণ প্রোফাইল ও সিমুলেটেড কার্যক্রম। বাস্তব ক্যামেরা বা মাইক্রোফোনের তথ্য নেওয়া হয় না; ব্যক্তিগত ইতিহাসে কিছু যোগ হয় না।'),
+  tourActivityAuto(
+      'Tour: this activity completes automatically. You do not need to call, move or touch the board.',
+      'ট্যুর: এই কার্যক্রম নিজে থেকেই শেষ হবে। নাম ধরে ডাকতে, নড়াচড়া করতে বা বোর্ড স্পর্শ করতে হবে না।'),
+  tourExit('Exit tour', 'ট্যুর বন্ধ করুন'),
+  tourNext('Next', 'পরবর্তী'),
+  tourFinish('Finish tour', 'ট্যুর শেষ করুন'),
+  tourProgress('Step {n} of {total}', 'ধাপ {n} / {total}'),
+  tourPrivacy(
+      'Demo only. All examples are simulated. No camera, microphone, environment data or personal information is used or saved.',
+      'শুধু ডেমো। সব উদাহরণ সিমুলেটেড। ক্যামেরা, মাইক্রোফোন, পরিবেশের তথ্য বা ব্যক্তিগত তথ্য ব্যবহার বা সংরক্ষণ করা হয় না।'),
+  tourOverview(
+      'Explore the session activities, then tap the button below to continue.',
+      'সেশনের কার্যক্রমগুলো দেখুন, তারপর নিচের বোতাম চেপে এগিয়ে যান।'),
+  tourProfile(
+      'Example profile: Adiba, 30 months. In a real session you enter your child’s details here. This tour needs no typing.',
+      'উদাহরণ তথ্য: আদিবা, ৩০ মাস। আসল সেশনে এখানে শিশুর তথ্য দেবেন। এই ট্যুরে কিছু লিখতে হবে না।'),
+  tourConsent(
+      'Here you choose session processing and optional summary storage or sharing. Tour choices are examples and never grant real consent.',
+      'এখানে সেশন পরিচালনা এবং ঐচ্ছিক সারাংশ সংরক্ষণ বা শেয়ারের সিদ্ধান্ত নেবেন। ট্যুরের সিদ্ধান্ত উদাহরণমাত্র, বাস্তব সম্মতি নয়।'),
+  tourEnvironment(
+      'Example readiness: camera, lighting, face position, noise and touchscreen are ready. These are illustrations; your surroundings are never checked during the tour.',
+      'উদাহরণ প্রস্তুতি: ক্যামেরা, আলো, মুখের অবস্থান, শব্দ ও টাচস্ক্রিন প্রস্তুত। এগুলো শুধু উদাহরণ; ট্যুরে আপনার পরিবেশ যাচাই করা হয় না।'),
+  tourCalibration('Calibration', 'প্রাথমিক সমন্বয়'),
+  tourCalibrate(
+      'In a real session, calibration checks whether head movement can be measured reliably. Tap the example button to see the simulated response.',
+      'আসল সেশনে মাথার নড়াচড়া নির্ভরযোগ্যভাবে মাপা যাচ্ছে কি না যাচাই করা হয়। সিমুলেটেড সাড়া দেখতে উদাহরণ বোতামটি চাপুন।'),
+  tourCalibrateAction('Try example calibration', 'উদাহরণ সমন্বয় দেখুন'),
+  tourTapAction('Tap “{action}”, then tap Next.',
+      '“{action}” চাপুন, তারপর পরবর্তী চাপুন।'),
+  tourSimulatedResponse(
+      'Example activity completed. Nothing was measured. Use the highlighted button to continue.',
+      'উদাহরণ কার্যক্রম শেষ হয়েছে। কিছুই মাপা হয়নি। এগিয়ে যেতে চিহ্নিত বোতামটি চাপুন।'),
+  tourStory('Play example story', 'উদাহরণ গল্প চালান'),
+  tourCall('Try calling the name', 'নাম ধরে ডাকার উদাহরণ দেখুন'),
+  tourLook('Tap the example target', 'উদাহরণ লক্ষ্যটি চাপুন'),
+  tourBubble('Tap the example bubble', 'উদাহরণ বুদবুদ চাপুন'),
+  tourCopy('Show example movement', 'উদাহরণ নড়াচড়া দেখুন'),
+  tourSwitch('Try the example new rule', 'উদাহরণ নতুন নিয়ম দেখুন'),
+  tourSummary(
+      'A real summary uses only reliable observations and shows one of these four next steps. This tour does not produce a child result, diagnosis or score.',
+      'আসল সারাংশে শুধু নির্ভরযোগ্য পর্যবেক্ষণ ব্যবহার করে এই চারটি পরবর্তী পদক্ষেপের একটি দেখানো হয়। এই ট্যুর শিশুর ফলাফল, রোগনির্ণয় বা স্কোর তৈরি করে না।'),
+  tourHistory(
+      'Saved summaries appear here when you choose to store them. This example tour adds nothing to your real history.',
+      'সংরক্ষণের সিদ্ধান্ত নিলে সারাংশ এখানে দেখা যাবে। এই উদাহরণ ট্যুর আপনার আসল ইতিহাসে কিছু যোগ করে না।'),
+  tourSettings('Profile and settings', 'প্রোফাইল ও সেটিংস'),
+  tourSettingsBody(
+      'From the home tabs you can review history, edit a profile, change language and replay this tour. Tap Finish tour to return home.',
+      'হোমের ট্যাব থেকে ইতিহাস দেখতে, প্রোফাইল বদলাতে, ভাষা বদলাতে এবং আবার ট্যুর চালাতে পারবেন। হোমে ফিরতে ট্যুর শেষ করুন চাপুন।'),
+  setupRotateHint('The screen turns sideways for the activities.',
+      'কার্যক্রমের জন্য স্ক্রিন আড়াআড়ি হয়ে যাবে।'),
 
   // ── Session stage ────────────────────────────────────────────────────
   stageActivityOf('Activity {n} of {total}', 'কার্যক্রম {n} / {total}'),
@@ -143,13 +224,17 @@ enum T {
   stagePause('Pause', 'বিরতি'),
   stageResume('Resume', 'আবার শুরু'),
   stagePausedTitle('Paused', 'বিরতি চলছে'),
-  stagePausedBody('This activity starts again from the beginning when you resume.', 'আবার শুরু করলে এই কার্যক্রম গোড়া থেকে শুরু হবে।'),
+  stagePausedBody(
+      'This activity starts again from the beginning when you resume.',
+      'আবার শুরু করলে এই কার্যক্রম গোড়া থেকে শুরু হবে।'),
   stageStopTitle('End the session now?', 'এখনই সেশন শেষ করবেন?'),
   stageStopBody(
       'Completed activities are kept. The summary uses only what was reliably measured.',
       'যেসব কার্যক্রম শেষ হয়েছে সেগুলো থাকবে। সারাংশে শুধু নির্ভরযোগ্যভাবে মাপা তথ্যই ব্যবহার হবে।'),
   stageKeepGoing('Keep going', 'চালিয়ে যান'),
   stageWeObserve('We observe: {construct}', 'আমরা লক্ষ্য করি: {construct}'),
+  stageGuide('Guide', 'গাইড'),
+  stageGuideClose('Got it', 'বুঝেছি'),
   stageStartActivity('Start activity', 'কার্যক্রম শুরু করুন'),
   stageSkipActivity('Skip', 'বাদ দিন'),
   stageMeasuring('Measuring…', 'মাপা হচ্ছে…'),
@@ -158,10 +243,14 @@ enum T {
   stageTryOf('Try {n} of {total}', 'চেষ্টা {n} / {total}'),
   stageTimeLeft('{sec} s left', 'আর {sec} সেকেন্ড'),
   doneMeasured('Measured', 'মাপা হয়েছে'),
-  doneNotEnough('Not enough reliable signal', 'যথেষ্ট নির্ভরযোগ্য তথ্য পাওয়া যায়নি'),
-  doneNoParticipation('{name} didn’t join in this time — that’s okay.', '{name} এবার যোগ দেয়নি — এতে কোনো সমস্যা নেই।'),
-  doneRetryOffer('You can try once more, or move on.', 'আরেকবার চেষ্টা করতে পারেন, অথবা এগিয়ে যেতে পারেন।'),
-  doneValidTrials('{n} of {total} tries measured', '{total}টির মধ্যে {n}টি চেষ্টা মাপা গেছে'),
+  doneNotEnough(
+      'Not enough reliable signal', 'যথেষ্ট নির্ভরযোগ্য তথ্য পাওয়া যায়নি'),
+  doneNoParticipation('{name} didn’t join in this time — that’s okay.',
+      '{name} এবার যোগ দেয়নি — এতে কোনো সমস্যা নেই।'),
+  doneRetryOffer('You can try once more, or move on.',
+      'আরেকবার চেষ্টা করতে পারেন, অথবা এগিয়ে যেতে পারেন।'),
+  doneValidTrials('{n} of {total} tries measured',
+      '{total}টির মধ্যে {n}টি চেষ্টা মাপা গেছে'),
   breakTitle('{name} may need a break', '{name}-এর হয়তো বিরতি দরকার'),
   breakBody(
       'The last activities did not hold {name}’s interest. You can end now and try another day — nothing is lost.',
@@ -180,53 +269,93 @@ enum T {
   calParent(
       'Seat {name} comfortably facing the phone. A star moves to four places — let {name} watch it. Please don’t point.',
       '{name}-কে আরাম করে ফোনের দিকে মুখ করে বসান। একটি তারা চারটি জায়গায় যাবে — {name}-কে সেটি দেখতে দিন। আঙুল দিয়ে দেখাবেন না।'),
-  calWhy('This checks whether head direction can be measured reliably in this setup.', 'এই অবস্থায় মাথার দিক নির্ভরযোগ্যভাবে মাপা যায় কি না, এটি তা যাচাই করে।'),
+  calWhy(
+      'This checks whether head direction can be measured reliably in this setup.',
+      'এই অবস্থায় মাথার দিক নির্ভরযোগ্যভাবে মাপা যায় কি না, এটি তা যাচাই করে।'),
+  calFramingHint(
+      'Hold the phone at arm’s length so {name}’s whole face shows. Encourage {name} to turn the whole head toward the star, not just the eyes.',
+      'ফোনটি হাত বাড়িয়ে ধরুন, যাতে {name}-এর পুরো মুখ দেখা যায়। {name}-কে শুধু চোখ না ঘুরিয়ে পুরো মাথা তারার দিকে ঘোরাতে উৎসাহ দিন।'),
   calStart('Start look check', 'দৃষ্টি যাচাই শুরু করুন'),
-  calWaitingFace('Waiting to see {name}’s face…', '{name}-এর মুখ দেখার অপেক্ষা…'),
+  calWaitingFace(
+      'Waiting to see {name}’s face…', '{name}-এর মুখ দেখার অপেক্ষা…'),
   calRunning('Watch the star!', 'তারাটা দেখো!'),
   calUsable('Look direction can be measured', 'দৃষ্টির দিক মাপা যাবে'),
-  calUsableBody('Clear left–right difference, steady measurement.', 'বাম-ডানের স্পষ্ট পার্থক্য, স্থির মাপ।'),
-  calUnusable('Look direction can’t be measured reliably', 'দৃষ্টির দিক নির্ভরযোগ্যভাবে মাপা যাচ্ছে না'),
+  calUsableBody('Clear left–right difference, steady measurement.',
+      'বাম-ডানের স্পষ্ট পার্থক্য, স্থির মাপ।'),
+  calUnusable('Look direction can’t be measured reliably',
+      'দৃষ্টির দিক নির্ভরযোগ্যভাবে মাপা যাচ্ছে না'),
   calUnusableBody(
       'Activities that depend on where {name} looks will leave that measurement out.',
       '{name} কোথায় তাকায় তার ওপর নির্ভরশীল কার্যক্রমগুলোতে সেই মাপ বাদ থাকবে।'),
-  calContinueWithout('Continue without look direction', 'দৃষ্টির দিক ছাড়াই এগিয়ে যান'),
+  calContinueWithout(
+      'Continue without look direction', 'দৃষ্টির দিক ছাড়াই এগিয়ে যান'),
 
   // ── Reasons ──────────────────────────────────────────────────────────
-  rCameraUnavailable('The camera was not available.', 'ক্যামেরা পাওয়া যায়নি।'),
-  rCameraPermissionDenied('Camera access was not allowed.', 'ক্যামেরার অনুমতি দেওয়া হয়নি।'),
-  rLowFrameRate('The camera was too slow on this phone.', 'এই ফোনে ক্যামেরা খুব ধীর ছিল।'),
+  rCameraUnavailable(
+      'The camera was not available.', 'ক্যামেরা পাওয়া যায়নি।'),
+  rCameraPermissionDenied(
+      'Camera access was not allowed.', 'ক্যামেরার অনুমতি দেওয়া হয়নি।'),
+  rLowFrameRate('The camera was too slow on this phone.',
+      'এই ফোনে ক্যামেরা খুব ধীর ছিল।'),
   rTooDark('It was too dark.', 'আলো খুব কম ছিল।'),
-  rTooBright('The light was too bright or behind {name}.', 'আলো খুব বেশি ছিল বা {name}-এর পেছন থেকে আসছিল।'),
-  rFaceNotVisible('{name}’s face was not visible enough.', '{name}-এর মুখ যথেষ্ট দেখা যায়নি।'),
-  rFaceTooFar('{name} was too far from the phone.', '{name} ফোন থেকে খুব দূরে ছিল।'),
-  rFaceTooClose('{name} was too close to the phone.', '{name} ফোনের খুব কাছে ছিল।'),
-  rEyesNotVisible('{name}’s eyes were not visible enough.', '{name}-এর চোখ যথেষ্ট দেখা যায়নি।'),
-  rGazeNotCalibrated('The look check was not completed.', 'দৃষ্টি যাচাই সম্পন্ন হয়নি।'),
-  rGazeCalibrationUnusable('The look check did not pass.', 'দৃষ্টি যাচাই সফল হয়নি।'),
-  rCalibrationTooFewSamples('{name}’s face was not seen clearly enough during the look check.', 'দৃষ্টি যাচাইয়ের সময় {name}-এর মুখ যথেষ্ট স্পষ্ট দেখা যায়নি।'),
-  rCalibrationTargetsNotSeparable('Looking left and looking right could not be told apart.', 'বামে ও ডানে তাকানো আলাদা করা যায়নি।'),
-  rCalibrationUnstable('Head position moved too much to measure.', 'মাথা খুব বেশি নড়ছিল, তাই মাপা যায়নি।'),
-  rMicrophoneUnavailable('The microphone was not available.', 'মাইক্রোফোন পাওয়া যায়নি।'),
-  rMicrophonePermissionDenied('Microphone access was not allowed.', 'মাইক্রোফোনের অনুমতি দেওয়া হয়নি।'),
-  rTooNoisy('It was too noisy to time the call.', 'ডাকার সময় মাপার জন্য আশপাশে শব্দ বেশি ছিল।'),
+  rTooBright('The light was too bright or behind {name}.',
+      'আলো খুব বেশি ছিল বা {name}-এর পেছন থেকে আসছিল।'),
+  rFaceNotVisible('{name}’s face was not visible enough.',
+      '{name}-এর মুখ যথেষ্ট দেখা যায়নি।'),
+  rFaceTooFar(
+      '{name} was too far from the phone.', '{name} ফোন থেকে খুব দূরে ছিল।'),
+  rFaceTooClose(
+      '{name} was too close to the phone.', '{name} ফোনের খুব কাছে ছিল।'),
+  rEyesNotVisible('{name}’s eyes were not visible enough.',
+      '{name}-এর চোখ যথেষ্ট দেখা যায়নি।'),
+  rGazeNotCalibrated(
+      'The look check was not completed.', 'দৃষ্টি যাচাই সম্পন্ন হয়নি।'),
+  rGazeCalibrationUnusable(
+      'The look check did not pass.', 'দৃষ্টি যাচাই সফল হয়নি।'),
+  rCalibrationTooFewSamples(
+      '{name}’s face was not seen clearly enough during the look check.',
+      'দৃষ্টি যাচাইয়ের সময় {name}-এর মুখ যথেষ্ট স্পষ্ট দেখা যায়নি।'),
+  rCalibrationTargetsNotSeparable(
+      'Looking left and looking right could not be told apart.',
+      'বামে ও ডানে তাকানো আলাদা করা যায়নি।'),
+  rCalibrationUnstable('Head position moved too much to measure.',
+      'মাথা খুব বেশি নড়ছিল, তাই মাপা যায়নি।'),
+  rMicrophoneUnavailable(
+      'The microphone was not available.', 'মাইক্রোফোন পাওয়া যায়নি।'),
+  rMicrophonePermissionDenied('Microphone access was not allowed.',
+      'মাইক্রোফোনের অনুমতি দেওয়া হয়নি।'),
+  rTooNoisy('It was too noisy to time the call.',
+      'ডাকার সময় মাপার জন্য আশপাশে শব্দ বেশি ছিল।'),
   rCallNotDetected('The name call was not heard.', 'নাম ধরে ডাকা শোনা যায়নি।'),
-  rCallTimedByCaregiver('Call timing came from your button tap, so it is less precise.', 'ডাকার সময় আপনার বোতাম চাপা থেকে নেওয়া, তাই কম নিখুঁত।'),
-  rNotAttendingBeforePrompt('{name} was not watching the screen when the try began.', 'চেষ্টা শুরুর সময় {name} স্ক্রিনের দিকে তাকিয়ে ছিল না।'),
-  rAlreadyLookingAtTarget('{name} was already looking at the toy before {guide} looked.', '{guide} তাকানোর আগেই {name} খেলনার দিকে তাকিয়ে ছিল।'),
-  rFaceLostWithoutTurn('{name} moved out of view.', '{name} ক্যামেরার বাইরে চলে গিয়েছিল।'),
-  rBodyNotVisible('{name}’s shoulders and hands were not in view.', '{name}-এর কাঁধ ও হাত দেখা যাচ্ছিল না।'),
+  rCallTimedByCaregiver(
+      'Call timing came from your button tap, so it is less precise.',
+      'ডাকার সময় আপনার বোতাম চাপা থেকে নেওয়া, তাই কম নিখুঁত।'),
+  rNotAttendingBeforePrompt(
+      '{name} was not watching the screen when the try began.',
+      'চেষ্টা শুরুর সময় {name} স্ক্রিনের দিকে তাকিয়ে ছিল না।'),
+  rAlreadyLookingAtTarget(
+      '{name} was already looking at the toy before {guide} looked.',
+      '{guide} তাকানোর আগেই {name} খেলনার দিকে তাকিয়ে ছিল।'),
+  rFaceLostWithoutTurn(
+      '{name} moved out of view.', '{name} ক্যামেরার বাইরে চলে গিয়েছিল।'),
+  rBodyNotVisible('{name}’s shoulders and hands were not in view.',
+      '{name}-এর কাঁধ ও হাত দেখা যাচ্ছিল না।'),
   rTooFewTouches('Too few taps to measure.', 'মাপার মতো যথেষ্ট ট্যাপ হয়নি।'),
   rNoTouches('No taps.', 'কোনো ট্যাপ হয়নি।'),
-  rPalmContact('Many touches looked like a palm or several fingers.', 'অনেক স্পর্শ হাতের তালু বা একাধিক আঙুলের মতো মনে হয়েছে।'),
-  rTooFewResponses('Too few answers to measure.', 'মাপার মতো যথেষ্ট সাড়া পাওয়া যায়নি।'),
+  rPalmContact('Many touches looked like a palm or several fingers.',
+      'অনেক স্পর্শ হাতের তালু বা একাধিক আঙুলের মতো মনে হয়েছে।'),
+  rTooFewResponses(
+      'Too few answers to measure.', 'মাপার মতো যথেষ্ট সাড়া পাওয়া যায়নি।'),
   rNoResponses('No answer in time.', 'সময়মতো সাড়া পাওয়া যায়নি।'),
-  rTooFewValidTrials('Too few tries could be measured reliably.', 'খুব কম চেষ্টা নির্ভরযোগ্যভাবে মাপা গেছে।'),
+  rTooFewValidTrials('Too few tries could be measured reliably.',
+      'খুব কম চেষ্টা নির্ভরযোগ্যভাবে মাপা গেছে।'),
   rPausedByCaregiver('Paused.', 'বিরতি দেওয়া হয়েছিল।'),
   rSkippedByCaregiver('Skipped by you.', 'আপনি বাদ দিয়েছেন।'),
-  rStoppedEarly('The session ended before this activity finished.', 'এই কার্যক্রম শেষ হওয়ার আগেই সেশন শেষ হয়েছে।'),
+  rStoppedEarly('The session ended before this activity finished.',
+      'এই কার্যক্রম শেষ হওয়ার আগেই সেশন শেষ হয়েছে।'),
   rNotOfferedForAge('Starts at 24 months.', '২৪ মাস বয়স থেকে শুরু হয়।'),
-  rSessionTimeLimit('The session time limit was reached.', 'সেশনের সময়সীমা শেষ হয়েছিল।'),
+  rSessionTimeLimit(
+      'The session time limit was reached.', 'সেশনের সময়সীমা শেষ হয়েছিল।'),
   rNoParticipation('{name} didn’t join in.', '{name} যোগ দেয়নি।'),
 
   // ── Activity statuses ────────────────────────────────────────────────
@@ -257,12 +386,15 @@ enum T {
   nameParent(
       'Sit slightly behind {name}, to one side. When the banner asks, call “{name}” once in your normal voice — then stay quiet.',
       '{name}-এর একটু পেছনে, এক পাশে বসুন। ব্যানারে বললে স্বাভাবিক গলায় একবার “{name}” বলে ডাকুন — তারপর চুপ থাকুন।'),
-  nameWaitAttention('Stay quiet — waiting for {name} to watch the screen…', 'চুপ থাকুন — {name} স্ক্রিনের দিকে তাকানোর অপেক্ষা…'),
+  nameWaitAttention('Stay quiet — waiting for {name} to watch the screen…',
+      'চুপ থাকুন — {name} স্ক্রিনের দিকে তাকানোর অপেক্ষা…'),
   nameCallNow('Now call “{name}” once', 'এখন একবার “{name}” বলে ডাকুন'),
   nameHeard('Heard you — stay quiet', 'শোনা গেছে — চুপ থাকুন'),
   nameICalled('I called {name}', 'আমি {name}-কে ডেকেছি'),
-  nameTapFallback('Tap this button at the moment you call.', 'যখন ডাকবেন, ঠিক তখনই এই বোতামটি চাপুন।'),
-  nameNotHeard('The call wasn’t heard. The next try starts in a moment.', 'ডাকটি শোনা যায়নি। একটু পরেই পরের চেষ্টা শুরু হবে।'),
+  nameTapFallback('Tap this button at the moment you call.',
+      'যখন ডাকবেন, ঠিক তখনই এই বোতামটি চাপুন।'),
+  nameNotHeard('The call wasn’t heard. The next try starts in a moment.',
+      'ডাকটি শোনা যায়নি। একটু পরেই পরের চেষ্টা শুরু হবে।'),
   nameBetween('Nice. Next try in a moment…', 'ভালো। একটু পরেই পরের চেষ্টা…'),
   nameChild('Look at the stars!', 'তারাগুলো দেখো!'),
 
@@ -273,7 +405,8 @@ enum T {
       'Stay quiet and let {name} watch. {guide} will look at one of the toys. Please don’t point or name the toys.',
       'চুপ থাকুন আর {name}-কে দেখতে দিন। {guide} একটি খেলনার দিকে তাকাবে। খেলনার দিকে দেখাবেন না বা নাম বলবেন না।'),
   lookChild('Where is {guide} looking?', '{guide} কোথায় তাকাচ্ছে?'),
-  lookWaitCenter('Waiting for {name} to look at {guide}…', '{name} {guide}-এর দিকে তাকানোর অপেক্ষা…'),
+  lookWaitCenter('Waiting for {name} to look at {guide}…',
+      '{name} {guide}-এর দিকে তাকানোর অপেক্ষা…'),
   lookToyCar('Toy car', 'খেলনা গাড়ি'),
   lookToyBunny('Toy bunny', 'খেলনা খরগোশ'),
   lookGazeUnavailable(
@@ -287,7 +420,8 @@ enum T {
       'Let {name} tap the bubbles with one finger. You may show one tap first, then let {name} play alone.',
       '{name}-কে এক আঙুল দিয়ে বুদবুদ ফাটাতে দিন। প্রথমে একবার দেখিয়ে দিতে পারেন, তারপর {name}-কে একা খেলতে দিন।'),
   bubbleChild('Pop the bubbles!', 'বুদবুদ ফাটাও!'),
-  bubbleInactive('Show {name} one tap, then let {name} try.', '{name}-কে একবার ট্যাপ করে দেখান, তারপর নিজে চেষ্টা করতে দিন।'),
+  bubbleInactive('Show {name} one tap, then let {name} try.',
+      '{name}-কে একবার ট্যাপ করে দেখান, তারপর নিজে চেষ্টা করতে দিন।'),
   bubblePopped('{n} popped', '{n}টি ফেটেছে'),
 
   // ── Copy Me ──────────────────────────────────────────────────────────
@@ -296,7 +430,9 @@ enum T {
   copyParent(
       'Seat {name} facing the phone with shoulders and hands in view. {guide} shows a movement — let {name} copy. Please don’t do the movement yourself.',
       '{name}-কে ফোনের দিকে মুখ করে বসান, যাতে কাঁধ ও হাত দেখা যায়। {guide} একটি ভঙ্গি দেখাবে — {name}-কে নকল করতে দিন। নিজে ভঙ্গিটি করবেন না।'),
-  copyFraming('Move the phone back a little so {name}’s shoulders and hands are visible.', 'ফোনটি একটু পিছিয়ে নিন, যাতে {name}-এর কাঁধ ও হাত দেখা যায়।'),
+  copyFraming(
+      'Move the phone back a little so {name}’s shoulders and hands are visible.',
+      'ফোনটি একটু পিছিয়ে নিন, যাতে {name}-এর কাঁধ ও হাত দেখা যায়।'),
   copyWatch('Watch {guide}!', '{guide}-কে দেখো!'),
   copyYourTurn('Your turn!', 'এবার তোমার পালা!'),
   copyHandsUp('Hands up!', 'হাত ওপরে!'),
@@ -316,14 +452,20 @@ enum T {
 
   // ── Result ───────────────────────────────────────────────────────────
   resultOverline('Session summary', 'সেশনের সারাংশ'),
-  stateNoStrongTitle('No strong follow-up signal observed', 'ফলো-আপের জোরালো কোনো সংকেত দেখা যায়নি'),
+  stateNoStrongTitle('No strong follow-up signal observed',
+      'ফলো-আপের জোরালো কোনো সংকেত দেখা যায়নি'),
   stateNoStrongBody(
       'No consistent pattern requiring escalation was observed in this session. This does not rule out a developmental condition.',
       'এই সেশনে উদ্বেগ বাড়ানোর মতো কোনো ধারাবাহিক ধরন দেখা যায়নি। এর মানে এই নয় যে কোনো বিকাশজনিত অবস্থা থাকতে পারে না।'),
   stateMonitorTitle('Monitor', 'নজর রাখুন'),
-  stateMonitorBody('One or more observations may be worth monitoring over time.', 'এক বা একাধিক পর্যবেক্ষণ সময়ের সাথে নজরে রাখা যেতে পারে।'),
-  stateDiscussTitle('Discuss with a professional', 'একজন বিশেষজ্ঞের সাথে আলোচনা করুন'),
-  stateDiscussBody('Several observations may be worth discussing with a qualified professional.', 'কয়েকটি পর্যবেক্ষণ নিয়ে একজন যোগ্য বিশেষজ্ঞের সাথে আলোচনা করা যেতে পারে।'),
+  stateMonitorBody(
+      'One or more observations may be worth monitoring over time.',
+      'এক বা একাধিক পর্যবেক্ষণ সময়ের সাথে নজরে রাখা যেতে পারে।'),
+  stateDiscussTitle(
+      'Discuss with a professional', 'একজন বিশেষজ্ঞের সাথে আলোচনা করুন'),
+  stateDiscussBody(
+      'Several observations may be worth discussing with a qualified professional.',
+      'কয়েকটি পর্যবেক্ষণ নিয়ে একজন যোগ্য বিশেষজ্ঞের সাথে আলোচনা করা যেতে পারে।'),
   stateInconclusiveTitle('Inconclusive', 'নিশ্চিত বলা যাচ্ছে না'),
   stateInconclusiveBody(
       'Sanket could not reliably interpret this session. {name} did not fail anything.',
@@ -340,7 +482,8 @@ enum T {
   nextInconclusive(
       'Try another day in a quiet, well-lit place when {name} is rested.',
       '{name} বিশ্রাম নেওয়ার পর কোনো শান্ত, আলোকিত জায়গায় অন্য দিন আবার চেষ্টা করুন।'),
-  inconclusiveTooFew('Only {n} activities had enough reliable measurement.', 'মাত্র {n}টি কার্যক্রমে যথেষ্ট নির্ভরযোগ্য মাপ পাওয়া গেছে।'),
+  inconclusiveTooFew('Only {n} activities had enough reliable measurement.',
+      'মাত্র {n}টি কার্যক্রমে যথেষ্ট নির্ভরযোগ্য মাপ পাওয়া গেছে।'),
   inconclusiveEvidence(
       'Too few of the core activities (Social Story, Name Response, Follow My Look) could be measured.',
       'মূল কার্যক্রমগুলোর (গল্পের সময়, নাম ধরে ডাকা, আমার চোখ অনুসরণ করো) খুব কমই মাপা গেছে।'),
@@ -353,11 +496,15 @@ enum T {
   resultCopied('Summary copied.', 'সারাংশ কপি হয়েছে।'),
   resultSaved('Saved on this phone', 'এই ফোনে সংরক্ষিত'),
   resultSaving('Saving…', 'সংরক্ষণ হচ্ছে…'),
-  resultNotSaved('Not saved — you chose not to keep sessions.', 'সংরক্ষিত হয়নি — আপনি সেশন না রাখার সিদ্ধান্ত নিয়েছেন।'),
+  resultNotSaved('Not saved — you chose not to keep sessions.',
+      'সংরক্ষিত হয়নি — আপনি সেশন না রাখার সিদ্ধান্ত নিয়েছেন।'),
   resultHistory('View session history', 'সেশনের ইতিহাস দেখুন'),
   resultHome('Return home', 'হোমে ফিরুন'),
-  resultPatternSuppressed('Not interpreted, because a {factor} was reported.', '{factor} জানানো হয়েছে বলে ব্যাখ্যা করা হয়নি।'),
-  resultDescriptiveOnly('Described only — this activity does not change the next step.', 'শুধু বর্ণনা — এই কার্যক্রম পরবর্তী পদক্ষেপ বদলায় না।'),
+  resultPatternSuppressed('Not interpreted, because a {factor} was reported.',
+      '{factor} জানানো হয়েছে বলে ব্যাখ্যা করা হয়নি।'),
+  resultDescriptiveOnly(
+      'Described only — this activity does not change the next step.',
+      'শুধু বর্ণনা — এই কার্যক্রম পরবর্তী পদক্ষেপ বদলায় না।'),
   factorHearing('hearing concern', 'শোনার সমস্যা'),
   factorVision('vision concern', 'দেখার সমস্যা'),
   factorMotor('motor difficulty', 'নড়াচড়ার অসুবিধা'),
@@ -370,15 +517,20 @@ enum T {
   noteLook(
       '{name} did not look toward the toy {guide} looked at in {n} measured tries.',
       'মাপা {n}টি চেষ্টায় {guide} যে খেলনার দিকে তাকিয়েছিল, {name} সেদিকে তাকায়নি।'),
-  noteCopy('No copied movement was detected in {n} measured tries.', 'মাপা {n}টি চেষ্টায় কোনো নকল ভঙ্গি শনাক্ত হয়নি।'),
-  sumStory('Looked toward {guide} for {pct}% of the measured time.', 'মাপা সময়ের {pct}% {guide}-এর দিকে তাকিয়েছে।'),
-  sumName('Turned toward the call in {n} of {total} measured tries.', 'মাপা {total}টির মধ্যে {n}টি চেষ্টায় ডাকের দিকে মাথা ঘুরিয়েছে।'),
+  noteCopy('No copied movement was detected in {n} measured tries.',
+      'মাপা {n}টি চেষ্টায় কোনো নকল ভঙ্গি শনাক্ত হয়নি।'),
+  sumStory('Looked toward {guide} for {pct}% of the measured time.',
+      'মাপা সময়ের {pct}% {guide}-এর দিকে তাকিয়েছে।'),
+  sumName('Turned toward the call in {n} of {total} measured tries.',
+      'মাপা {total}টির মধ্যে {n}টি চেষ্টায় ডাকের দিকে মাথা ঘুরিয়েছে।'),
   sumLatency('Typical time: {sec} s.', 'সাধারণ সময়: {sec} সেকেন্ড।'),
-  sumLook('Followed {guide}’s look in {n} of {total} measured tries.', 'মাপা {total}টির মধ্যে {n}টি চেষ্টায় {guide}-এর দৃষ্টি অনুসরণ করেছে।'),
-  sumBubble('Popped {n} bubbles from {taps} taps.', '{taps}টি ট্যাপে {n}টি বুদবুদ ফাটিয়েছে।'),
-  sumCopy('Copied the movement in {n} of {total} measured tries.', 'মাপা {total}টির মধ্যে {n}টি চেষ্টায় ভঙ্গি নকল করেছে।'),
-  sumSwitch(
-      'Correct taps: {a} of {b} before the switch, {c} of {d} after.',
+  sumLook('Followed {guide}’s look in {n} of {total} measured tries.',
+      'মাপা {total}টির মধ্যে {n}টি চেষ্টায় {guide}-এর দৃষ্টি অনুসরণ করেছে।'),
+  sumBubble('Popped {n} bubbles from {taps} taps.',
+      '{taps}টি ট্যাপে {n}টি বুদবুদ ফাটিয়েছে।'),
+  sumCopy('Copied the movement in {n} of {total} measured tries.',
+      'মাপা {total}টির মধ্যে {n}টি চেষ্টায় ভঙ্গি নকল করেছে।'),
+  sumSwitch('Correct taps: {a} of {b} before the switch, {c} of {d} after.',
       'সঠিক ট্যাপ: বদলের আগে {b}টির মধ্যে {a}টি, বদলের পরে {d}টির মধ্যে {c}টি।'),
   copyHeader('Sanket observation session', 'সংকেত পর্যবেক্ষণ সেশন'),
   copyNotDiagnosis('This is not a diagnosis.', 'এটি রোগনির্ণয় নয়।'),
@@ -390,12 +542,15 @@ enum T {
       'Only sessions saved on this phone appear here. Results are observations, not scores.',
       'শুধু এই ফোনে সংরক্ষিত সেশনগুলো এখানে দেখা যায়। ফলাফলগুলো পর্যবেক্ষণ, স্কোর নয়।'),
   historyEmpty('No saved sessions yet.', 'এখনো কোনো সংরক্ষিত সেশন নেই।'),
-  historyTrendTitle('Measured activities per session', 'প্রতি সেশনে মাপা কার্যক্রম'),
-  historyTrendEmpty('A trend appears after two saved sessions.', 'দুটি সংরক্ষিত সেশনের পর একটি ধারা দেখা যাবে।'),
+  historyTrendTitle(
+      'Measured activities per session', 'প্রতি সেশনে মাপা কার্যক্রম'),
+  historyTrendEmpty('A trend appears after two saved sessions.',
+      'দুটি সংরক্ষিত সেশনের পর একটি ধারা দেখা যাবে।'),
   historyTrendCaption(
       'Each bar shows how many activities had enough reliable measurement — a data-quality view, not a developmental score.',
       'প্রতিটি বার দেখায় কতগুলো কার্যক্রমে যথেষ্ট নির্ভরযোগ্য মাপ পাওয়া গেছে — এটি তথ্যের মান, বিকাশের স্কোর নয়।'),
-  historyMeasured('{n} of {total} activities measured', '{total}টির মধ্যে {n}টি কার্যক্রম মাপা হয়েছে'),
+  historyMeasured('{n} of {total} activities measured',
+      '{total}টির মধ্যে {n}টি কার্যক্রম মাপা হয়েছে'),
   historyChild('{name} · {age} months', '{name} · {age} মাস'),
   sessionCompleted('Completed', 'সম্পন্ন'),
   sessionStopped('Ended early', 'আগেই শেষ'),

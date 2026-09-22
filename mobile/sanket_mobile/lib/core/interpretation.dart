@@ -24,11 +24,19 @@ import 'activity_catalog.dart';
 import 'measurement.dart';
 import 'prototype_parameters.dart';
 
-enum ObservationState { noStrongSignal, monitor, discussProfessional, inconclusive }
+enum ObservationState {
+  noStrongSignal,
+  monitor,
+  discussProfessional,
+  inconclusive
+}
 
 enum ContextFactor { hearingConcern, visionConcern, motorDifficulty }
 
-enum InconclusiveReason { tooFewValidActivities, tooFewEvidenceBackedActivities }
+enum InconclusiveReason {
+  tooFewValidActivities,
+  tooFewEvidenceBackedActivities
+}
 
 class ChildContext {
   const ChildContext({
@@ -52,12 +60,12 @@ class InterpretedPattern {
         'note': note.name,
         'suppressedBy': suppressedBy?.name,
       };
-  factory InterpretedPattern.fromJson(Map<String, dynamic> j) => InterpretedPattern(
-      ActivityId.values.byName(j['activity'] as String),
-      PatternNote.values.byName(j['note'] as String),
-      suppressedBy: j['suppressedBy'] == null
-          ? null
-          : ContextFactor.values.byName(j['suppressedBy'] as String));
+  factory InterpretedPattern.fromJson(Map<String, dynamic> j) =>
+      InterpretedPattern(ActivityId.values.byName(j['activity'] as String),
+          PatternNote.values.byName(j['note'] as String),
+          suppressedBy: j['suppressedBy'] == null
+              ? null
+              : ContextFactor.values.byName(j['suppressedBy'] as String));
 }
 
 class SessionOutcome {
@@ -78,7 +86,8 @@ class SessionOutcome {
   final InconclusiveReason? inconclusiveReason;
   final String rulesVersion;
 
-  Iterable<InterpretedPattern> get counted => patterns.where((p) => p.suppressedBy == null);
+  Iterable<InterpretedPattern> get counted =>
+      patterns.where((p) => p.suppressedBy == null);
 
   Map<String, Object?> toJson() => {
         'state': state.name,
@@ -99,7 +108,8 @@ class SessionOutcome {
         ],
         inconclusiveReason: j['inconclusiveReason'] == null
             ? null
-            : InconclusiveReason.values.byName(j['inconclusiveReason'] as String),
+            : InconclusiveReason.values
+                .byName(j['inconclusiveReason'] as String),
         rulesVersion: j['rulesVersion'] as String,
       );
 }
@@ -107,15 +117,19 @@ class SessionOutcome {
 class SessionInterpreter {
   const SessionInterpreter();
 
-  SessionOutcome interpret(List<ActivityObservation> observations, ChildContext context) {
+  SessionOutcome interpret(
+      List<ActivityObservation> observations, ChildContext context) {
     final valid = observations.where((o) => o.valid).toList();
-    final evidenceValid =
-        valid.where((o) => o.activity.definition.role == InterpretationRole.escalating).length;
+    final evidenceValid = valid
+        .where(
+            (o) => o.activity.definition.role == InterpretationRole.escalating)
+        .length;
 
     final patterns = [
       for (final o in valid)
         for (final n in o.notes)
-          InterpretedPattern(o.activity, n, suppressedBy: _suppression(o.activity, context))
+          InterpretedPattern(o.activity, n,
+              suppressedBy: _suppression(o.activity, context))
     ];
 
     InconclusiveReason? inconclusive;
@@ -134,10 +148,14 @@ class SessionInterpreter {
     }
 
     final counted = patterns.where((p) => p.suppressedBy == null);
-    final escalating =
-        counted.where((p) => p.activity.definition.role == InterpretationRole.escalating).length;
-    final monitorOnly =
-        counted.where((p) => p.activity.definition.role == InterpretationRole.monitorOnly).length;
+    final escalating = counted
+        .where(
+            (p) => p.activity.definition.role == InterpretationRole.escalating)
+        .length;
+    final monitorOnly = counted
+        .where(
+            (p) => p.activity.definition.role == InterpretationRole.monitorOnly)
+        .length;
 
     final state = escalating >= 2
         ? ObservationState.discussProfessional
@@ -151,11 +169,15 @@ class SessionInterpreter {
         patterns: patterns);
   }
 
-  ContextFactor? _suppression(ActivityId activity, ChildContext c) => switch (activity) {
-        ActivityId.nameResponse when c.hearingConcern => ContextFactor.hearingConcern,
-        ActivityId.socialStory || ActivityId.followMyLook when c.visionConcern =>
+  ContextFactor? _suppression(ActivityId activity, ChildContext c) =>
+      switch (activity) {
+        ActivityId.nameResponse when c.hearingConcern =>
+          ContextFactor.hearingConcern,
+        ActivityId.socialStory ||
+        ActivityId.followMyLook when c.visionConcern =>
           ContextFactor.visionConcern,
-        ActivityId.copyMe when c.motorDifficulty => ContextFactor.motorDifficulty,
+        ActivityId.copyMe when c.motorDifficulty =>
+          ContextFactor.motorDifficulty,
         _ => null,
       };
 }

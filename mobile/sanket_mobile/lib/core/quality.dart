@@ -8,13 +8,19 @@ import 'measurement.dart';
 import 'prototype_parameters.dart';
 import 'samples.dart';
 
-
 /// Frames inside [fromMs, toMs].
-List<VisionFrame> framesBetween(List<VisionFrame> frames, int fromMs, int toMs) =>
-    [for (final f in frames) if (f.tMs >= fromMs && f.tMs <= toMs) f];
+List<VisionFrame> framesBetween(
+        List<VisionFrame> frames, int fromMs, int toMs) =>
+    [
+      for (final f in frames)
+        if (f.tMs >= fromMs && f.tMs <= toMs) f
+    ];
 
 List<AudioLevel> audioBetween(List<AudioLevel> levels, int fromMs, int toMs) =>
-    [for (final a in levels) if (a.tMs >= fromMs && a.tMs <= toMs) a];
+    [
+      for (final a in levels)
+        if (a.tMs >= fromMs && a.tMs <= toMs) a
+    ];
 
 /// Why a single face frame cannot be used for head-orientation measurement,
 /// or null when it can.
@@ -24,7 +30,8 @@ ReasonCode? faceFrameProblem(VisionFrame frame) {
   final face = frame.face;
   if (face == null) return ReasonCode.faceNotVisible;
   if (face.widthFraction < P.minFaceWidthFraction) return ReasonCode.faceTooFar;
-  if (face.widthFraction > P.maxFaceWidthFraction) return ReasonCode.faceTooClose;
+  if (face.widthFraction > P.maxFaceWidthFraction)
+    return ReasonCode.faceTooClose;
   return null;
 }
 
@@ -44,8 +51,7 @@ ModalityQuality assessCamera(List<VisionFrame> frames, int durationMs,
         reason: ReasonCode.cameraUnavailable);
   }
   final fps = framesPerSecond(frames, durationMs);
-  return ModalityQuality(
-      Modality.camera,
+  return ModalityQuality(Modality.camera,
       fps >= P.minVisionFps ? QualityStatus.valid : QualityStatus.excluded,
       reason: fps >= P.minVisionFps ? null : ReasonCode.lowFrameRate,
       value: fps);
@@ -88,7 +94,8 @@ ModalityQuality assessFace(List<VisionFrame> frames,
   if (fraction >= minFraction) {
     return ModalityQuality(Modality.face, QualityStatus.valid, value: fraction);
   }
-  final dominant = problems.entries.reduce((a, b) => a.value >= b.value ? a : b);
+  final dominant =
+      problems.entries.reduce((a, b) => a.value >= b.value ? a : b);
   return ModalityQuality(Modality.face, QualityStatus.excluded,
       reason: dominant.key, value: fraction);
 }

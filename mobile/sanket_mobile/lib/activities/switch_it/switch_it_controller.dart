@@ -22,13 +22,15 @@ class SwitchItController extends ActivityController {
   @override
   bool get requiresCamera => false;
   @override
-  int get expectedDurationMs => P.switchTrialsPerRule * 2 * 2600 + _switchScreenMs;
+  int get expectedDurationMs =>
+      P.switchTrialsPerRule * 2 * 2600 + _switchScreenMs;
 
   int get totalTrials => P.switchTrialsPerRule * 2;
 
   SwitchPhase switchPhase = SwitchPhase.showing;
   int trial = 0;
-  SwitchRule get rule => trial <= P.switchTrialsPerRule ? SwitchRule.bird : SwitchRule.ball;
+  SwitchRule get rule =>
+      trial <= P.switchTrialsPerRule ? SwitchRule.bird : SwitchRule.ball;
 
   /// Whether the bird is on the left in the current trial (ball opposite).
   bool birdOnLeft = true;
@@ -39,8 +41,9 @@ class SwitchItController extends ActivityController {
   int _omissionsInRow = 0;
 
   @override
-  double get progress =>
-      phase == ActivityPhase.running ? ((trial - 1).clamp(0, totalTrials) / totalTrials) : super.progress;
+  double get progress => phase == ActivityPhase.running
+      ? ((trial - 1).clamp(0, totalTrials) / totalTrials)
+      : super.progress;
 
   @override
   void onStart() {
@@ -54,7 +57,8 @@ class SwitchItController extends ActivityController {
       finish();
       return;
     }
-    if (trial == P.switchTrialsPerRule && switchPhase != SwitchPhase.switching) {
+    if (trial == P.switchTrialsPerRule &&
+        switchPhase != SwitchPhase.switching) {
       // Announce the new rule before the first ball trial.
       switchPhase = SwitchPhase.switching;
       record(SwitchItAnalyzer.ruleSwitch);
@@ -97,10 +101,12 @@ class SwitchItController extends ActivityController {
 
   /// The child tapped the bird or the ball.
   void tap(SwitchRule item) {
-    if (phase != ActivityPhase.running || switchPhase != SwitchPhase.showing) return;
+    if (phase != ActivityPhase.running || switchPhase != SwitchPhase.showing)
+      return;
     chosen = item;
     _omissionsInRow = 0;
-    record(SwitchItAnalyzer.response, {'index': trial, 'chosen': item.name, 'rtMs': now - _shownAt});
+    record(SwitchItAnalyzer.response,
+        {'index': trial, 'chosen': item.name, 'rtMs': now - _shownAt});
     switchPhase = SwitchPhase.feedback;
     final token = ++_token;
     after(_feedbackMs, () {

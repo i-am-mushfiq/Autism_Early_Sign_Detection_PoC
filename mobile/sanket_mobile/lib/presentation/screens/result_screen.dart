@@ -41,31 +41,45 @@ class ResultScreen extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        SectionHeader(overline: s(T.resultOverline), title: s.stateTitle(outcome.state)),
+        SectionHeader(
+            overline: s(T.resultOverline), title: s.stateTitle(outcome.state)),
         InfoCard(
-          color: outcome.state == ObservationState.inconclusive ? const Color(0xfff0f0ec) : SanketColors.mint,
+          color: outcome.state == ObservationState.inconclusive
+              ? const Color(0xfff0f0ec)
+              : SanketColors.mint,
           child: Column(children: [
-            Icon(stateIcon(outcome.state), size: 46, color: SanketColors.primary),
+            Icon(stateIcon(outcome.state),
+                size: 46, color: SanketColors.primary),
             const SizedBox(height: 10),
             Text(s.stateBody(outcome.state, name),
-                textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, height: 1.5)),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16, height: 1.5)),
             if (text.inconclusiveDetail(outcome) != null) ...[
               const SizedBox(height: 8),
               Text(text.inconclusiveDetail(outcome)!,
-                  textAlign: TextAlign.center, style: const TextStyle(color: SanketColors.muted)),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: SanketColors.muted)),
             ],
           ]),
         ),
         const SizedBox(height: 22),
-        Text(s(T.resultWhatObserved), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+        Text(s(T.resultWhatObserved),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
         for (final def in activityCatalog)
-          if (byActivity[def.id] != null) _ActivityRow(observation: byActivity[def.id]!, outcome: outcome, text: text),
+          if (byActivity[def.id] != null)
+            _ActivityRow(
+                observation: byActivity[def.id]!, outcome: outcome, text: text),
         const SizedBox(height: 22),
-        Text(s(T.resultNextStep), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
-        IconNote(icon: Icons.near_me_outlined, color: SanketColors.cream, text: s.nextStep(outcome.state, name)),
+        Text(s(T.resultNextStep),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+        IconNote(
+            icon: Icons.near_me_outlined,
+            color: SanketColors.cream,
+            text: s.nextStep(outcome.state, name)),
         Padding(
           padding: const EdgeInsets.only(top: 16),
-          child: Text(s(T.resultBoundary), style: const TextStyle(fontSize: 13, color: SanketColors.faint)),
+          child: Text(s(T.resultBoundary),
+              style: const TextStyle(fontSize: 13, color: SanketColors.faint)),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 12),
@@ -95,13 +109,17 @@ class ResultScreen extends StatelessWidget {
           icon: Icons.copy_rounded,
           pale: true,
           onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: text.clipboard(record)));
+            await Clipboard.setData(
+                ClipboardData(text: text.clipboard(record)));
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s(T.resultCopied))));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(s(T.resultCopied))));
             }
           },
         ),
-        if (record.consents.storeOnDevice) PrimaryButton(label: s(T.resultHistory), pale: true, onPressed: onHistory),
+        if (record.consents.storeOnDevice)
+          PrimaryButton(
+              label: s(T.resultHistory), pale: true, onPressed: onHistory),
         PrimaryButton(label: s(T.resultHome), onPressed: onHome),
       ]),
     );
@@ -109,7 +127,8 @@ class ResultScreen extends StatelessWidget {
 }
 
 class _ActivityRow extends StatelessWidget {
-  const _ActivityRow({required this.observation, required this.outcome, required this.text});
+  const _ActivityRow(
+      {required this.observation, required this.outcome, required this.text});
   final ActivityObservation observation;
   final SessionOutcome outcome;
   final ObservationText text;
@@ -122,7 +141,10 @@ class _ActivityRow extends StatelessWidget {
     final summary = text.summary(o);
     final (icon, color) = switch (o.status) {
       ActivityStatus.valid => (Icons.check_circle, SanketColors.leaf),
-      ActivityStatus.notOffered => (Icons.remove_circle_outline, SanketColors.faint),
+      ActivityStatus.notOffered => (
+          Icons.remove_circle_outline,
+          SanketColors.faint
+        ),
       ActivityStatus.skipped => (Icons.skip_next_rounded, SanketColors.faint),
       _ => (Icons.help_outline, SanketColors.warn),
     };
@@ -133,17 +155,24 @@ class _ActivityRow extends StatelessWidget {
         Icon(icon, color: color),
         const SizedBox(width: 12),
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(s.activityName(o.activity), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-            Text(s.activityStatus(o.status), style: TextStyle(color: color, fontWeight: FontWeight.w600)),
-            if (summary != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(summary)),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(s.activityName(o.activity),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+            Text(s.activityStatus(o.status),
+                style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+            if (summary != null)
+              Padding(
+                  padding: const EdgeInsets.only(top: 4), child: Text(summary)),
             if (!o.valid &&
                 o.reason != null &&
                 o.status != ActivityStatus.notOffered &&
                 o.status != ActivityStatus.nonParticipation)
               Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: Text(s.reason(o.reason!, text.name), style: const TextStyle(color: SanketColors.muted))),
+                  child: Text(s.reason(o.reason!, text.name),
+                      style: const TextStyle(color: SanketColors.muted))),
             if (o.status == ActivityStatus.notOffered)
               Padding(
                   padding: const EdgeInsets.only(top: 4),
@@ -151,15 +180,21 @@ class _ActivityRow extends StatelessWidget {
                       style: const TextStyle(color: SanketColors.muted))),
             for (final p in patterns) ...[
               const SizedBox(height: 6),
-              Text(text.pattern(p, o), style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(text.pattern(p, o),
+                  style: const TextStyle(fontWeight: FontWeight.w600)),
               if (p.suppressedBy != null)
-                Text(s(T.resultPatternSuppressed, {'factor': s.factor(p.suppressedBy!)}),
+                Text(
+                    s(T.resultPatternSuppressed,
+                        {'factor': s.factor(p.suppressedBy!)}),
                     style: const TextStyle(color: SanketColors.muted)),
             ],
-            if (o.valid && o.activity.definition.role == InterpretationRole.descriptive)
+            if (o.valid &&
+                o.activity.definition.role == InterpretationRole.descriptive)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
-                child: Text(s(T.resultDescriptiveOnly), style: const TextStyle(fontSize: 12, color: SanketColors.faint)),
+                child: Text(s(T.resultDescriptiveOnly),
+                    style: const TextStyle(
+                        fontSize: 12, color: SanketColors.faint)),
               ),
           ]),
         ),

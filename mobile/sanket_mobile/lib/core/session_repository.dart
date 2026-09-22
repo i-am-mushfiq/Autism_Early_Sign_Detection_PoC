@@ -50,7 +50,8 @@ class SessionRepository {
     final list = <SessionRecord>[];
     for (final item in jsonDecode(raw) as List) {
       try {
-        list.add(SessionRecord.fromJson(Map<String, dynamic>.from(item as Map)));
+        list.add(
+            SessionRecord.fromJson(Map<String, dynamic>.from(item as Map)));
       } catch (_) {
         // A corrupt record is skipped rather than breaking all history.
       }
@@ -79,7 +80,8 @@ class SessionRepository {
 
   /// Marks sessions that were still in progress (app closed mid-session) as
   /// interrupted. [activeId] is excluded so a live session is never touched.
-  Future<int> recoverInterrupted(DateTime now, {String? activeId}) => _serial(() async {
+  Future<int> recoverInterrupted(DateTime now, {String? activeId}) =>
+      _serial(() async {
         final records = await _readAll();
         var changed = 0;
         for (final r in records) {

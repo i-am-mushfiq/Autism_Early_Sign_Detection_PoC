@@ -26,11 +26,14 @@ class BubbleTrailAnalyzer implements ActivityAnalyzer {
     final rejectedCount = c.eventsOf(rejected).length;
     final touches = pops.length + misses.length;
     final rts = [for (final p in pops) p.get<int>('rtMs')];
-    final errors = [for (final p in pops) (p.data['errorNorm'] as num).toDouble()];
+    final errors = [
+      for (final p in pops) (p.data['errorNorm'] as num).toDouble()
+    ];
 
     var corrections = 0;
     for (final m in misses) {
-      if (pops.any((p) => p.tMs > m.tMs && p.tMs - m.tMs <= P.bubbleCorrectionMs)) {
+      if (pops
+          .any((p) => p.tMs > m.tMs && p.tMs - m.tMs <= P.bubbleCorrectionMs)) {
         corrections++;
       }
     }
@@ -51,26 +54,37 @@ class BubbleTrailAnalyzer implements ActivityAnalyzer {
                 : null,
         value: touches.toDouble());
 
-    final enough = touches >= P.bubbleMinTouches && pops.length >= P.bubbleMinHits;
-    final rel = enough && touch.status == QualityStatus.valid ? Reliability.adequate : Reliability.limited;
+    final enough =
+        touches >= P.bubbleMinTouches && pops.length >= P.bubbleMinHits;
+    final rel = enough && touch.status == QualityStatus.valid
+        ? Reliability.adequate
+        : Reliability.limited;
     final rtMean = mean(rts);
     final rtSd = standardDeviation(rts);
     final features = <Feature>[
-      Feature('bubbles_popped', pops.length.toDouble(), Modality.touch, unit: 'count'),
+      Feature('bubbles_popped', pops.length.toDouble(), Modality.touch,
+          unit: 'count'),
       Feature('touches', touches.toDouble(), Modality.touch, unit: 'count'),
-      Feature('bubbles_missed', c.eventsOf(expire).length.toDouble(), Modality.touch, unit: 'count'),
+      Feature('bubbles_missed', c.eventsOf(expire).length.toDouble(),
+          Modality.touch,
+          unit: 'count'),
       if (touches > 0)
-        Feature('hit_rate', pops.length / touches, Modality.touch, unit: 'ratio', reliability: rel),
+        Feature('hit_rate', pops.length / touches, Modality.touch,
+            unit: 'ratio', reliability: rel),
       if (rts.isNotEmpty)
-        Feature('median_reaction_ms', median(rts)!, Modality.touch, unit: 'ms', reliability: rel),
+        Feature('median_reaction_ms', median(rts)!, Modality.touch,
+            unit: 'ms', reliability: rel),
       if (rtMean != null && rtSd != null && rts.length >= 3 && rtMean > 0)
-        Feature('reaction_time_cv', rtSd / rtMean, Modality.touch, unit: 'ratio', reliability: rel),
+        Feature('reaction_time_cv', rtSd / rtMean, Modality.touch,
+            unit: 'ratio', reliability: rel),
       if (errors.isNotEmpty)
         Feature('mean_endpoint_error', mean(errors)!, Modality.touch,
             unit: 'bubble radii', reliability: rel),
-      Feature('corrections', corrections.toDouble(), Modality.touch, unit: 'count'),
+      Feature('corrections', corrections.toDouble(), Modality.touch,
+          unit: 'count'),
       if (rejectedCount > 0)
-        Feature('rejected_touches', rejectedCount.toDouble(), Modality.touch, unit: 'count'),
+        Feature('rejected_touches', rejectedCount.toDouble(), Modality.touch,
+            unit: 'count'),
     ];
 
     final status = touches == 0

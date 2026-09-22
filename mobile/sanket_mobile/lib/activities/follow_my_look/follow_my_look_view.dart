@@ -33,7 +33,8 @@ class FollowMyLookBoard extends StatelessWidget {
           final tapped = c.tapped == side;
           return Semantics(
             button: true,
-            label: context.s(side == GazeRegion.left ? T.lookToyCar : T.lookToyBunny),
+            label: context
+                .s(side == GazeRegion.left ? T.lookToyCar : T.lookToyBunny),
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => c.tapToy(side),
@@ -50,8 +51,14 @@ class FollowMyLookBoard extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 4),
                     ),
-                    child: Icon(side == GazeRegion.left ? Icons.directions_car_filled_rounded : Icons.cruelty_free,
-                        size: 78, color: side == GazeRegion.left ? const Color(0xffe3534b) : const Color(0xff8a6bd1)),
+                    child: Icon(
+                        side == GazeRegion.left
+                            ? Icons.directions_car_filled_rounded
+                            : Icons.cruelty_free,
+                        size: 78,
+                        color: side == GazeRegion.left
+                            ? const Color(0xffe3534b)
+                            : const Color(0xff8a6bd1)),
                   ),
                 ),
               ),
@@ -71,7 +78,8 @@ class FollowMyLookBoard extends StatelessWidget {
                     tween: Tween(end: look),
                     duration: const Duration(milliseconds: 650),
                     curve: Curves.easeInOut,
-                    builder: (context, value, _) => FittedBox(child: GuideFigure(look: value, size: 170)),
+                    builder: (context, value, _) =>
+                        FittedBox(child: GuideFigure(look: value, size: 170)),
                   ),
                 ),
               ),
@@ -85,7 +93,8 @@ class FollowMyLookBoard extends StatelessWidget {
 }
 
 class FollowMyLookPanel extends StatelessWidget {
-  const FollowMyLookPanel({super.key, required this.controller, required this.name});
+  const FollowMyLookPanel(
+      {super.key, required this.controller, required this.name});
   final FollowMyLookController controller;
   final String name;
 
@@ -96,19 +105,25 @@ class FollowMyLookPanel extends StatelessWidget {
       animation: controller,
       builder: (context, _) {
         final c = controller;
-        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          StatusPill(text: s(T.stageTryOf, {'n': c.trial.clamp(1, 4), 'total': 4}), background: SanketColors.pale),
-          if (c.lookPhase == LookPhase.waitingCenter && c.gazeAvailable) ...[
-            const SizedBox(height: 10),
-            Text(s(T.lookWaitCenter, {'name': name}), style: const TextStyle(color: SanketColors.muted)),
-          ],
-          if (!c.gazeAvailable)
-            IconNote(
-                icon: Icons.info_outline,
-                iconColor: SanketColors.warn,
-                color: SanketColors.warnSoft,
-                text: s(T.lookGazeUnavailable, {'name': name})),
-        ]);
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              StatusPill(
+                  text: s(T.stageTryOf, {'n': c.trial.clamp(1, 4), 'total': 4}),
+                  background: SanketColors.pale),
+              if (c.lookPhase == LookPhase.waitingCenter &&
+                  c.gazeAvailable) ...[
+                const SizedBox(height: 10),
+                Text(s(T.lookWaitCenter, {'name': name}),
+                    style: const TextStyle(color: SanketColors.muted)),
+              ],
+              if (!c.gazeAvailable)
+                IconNote(
+                    icon: Icons.info_outline,
+                    iconColor: SanketColors.warn,
+                    color: SanketColors.warnSoft,
+                    text: s(T.lookGazeUnavailable, {'name': name})),
+            ]);
       },
     );
   }

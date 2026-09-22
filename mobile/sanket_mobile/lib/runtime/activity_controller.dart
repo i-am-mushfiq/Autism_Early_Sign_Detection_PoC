@@ -17,6 +17,7 @@ class ActivityContext {
     required this.calibration,
     required this.profile,
     this.attempt = 1,
+    this.allowAutomaticFinish = true,
     math.Random? random,
   }) : random = random ?? math.Random();
 
@@ -24,6 +25,7 @@ class ActivityContext {
   final CalibrationResult calibration;
   final ChildProfile profile;
   final int attempt;
+  final bool allowAutomaticFinish;
   final math.Random random;
 }
 
@@ -124,7 +126,9 @@ abstract class ActivityController extends ChangeNotifier {
   void after(int ms, void Function() action) {
     final attemptStart = _startMs;
     _timers.add(Timer(Duration(milliseconds: ms), () {
-      if (phase == ActivityPhase.running && _startMs == attemptStart && !_disposed) {
+      if (phase == ActivityPhase.running &&
+          _startMs == attemptStart &&
+          !_disposed) {
         action();
         notify();
       }
@@ -149,18 +153,32 @@ abstract class ActivityController extends ChangeNotifier {
       );
 
   ActivityObservation unavailableObservation() {
-    final denied = !ctx.sensors.availability.camera && ctx.sensors.availability.cameraDenied;
-    final reason = denied ? ReasonCode.cameraPermissionDenied : ReasonCode.cameraUnavailable;
+    final denied = !ctx.sensors.availability.camera &&
+        ctx.sensors.availability.cameraDenied;
+    final reason = denied
+        ? ReasonCode.cameraPermissionDenied
+        : ReasonCode.cameraUnavailable;
     return ActivityObservation(
         activity: id,
         status: ActivityStatus.insufficient,
         reason: reason,
-        quality: [ModalityQuality(Modality.camera, QualityStatus.unavailable, reason: reason)],
+        quality: [
+          ModalityQuality(Modality.camera, QualityStatus.unavailable,
+              reason: reason)
+        ],
         attempt: ctx.attempt);
   }
 
   /// Ends the attempt normally (or early with [endedBy]) and analyzes it.
   ActivityObservation finish({ReasonCode? endedBy}) {
+    // The tour owns completion timing so an inactivity timeout cannot cut its
+    // preview short or turn an example into a child observation.
+    if (!ctx.allowAutomaticFinish) {
+      return ActivityObservation(
+          activity: id,
+          status: ActivityStatus.insufficient,
+          reason: ReasonCode.tooFewValidTrials);
+    }
     if (phase != ActivityPhase.running) return result!;
     final c = capture(endedBy: endedBy);
     _stopCapture();

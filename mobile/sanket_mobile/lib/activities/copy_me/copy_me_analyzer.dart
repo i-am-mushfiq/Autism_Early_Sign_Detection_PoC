@@ -24,12 +24,14 @@ class CopyMeAnalyzer implements ActivityAnalyzer {
 
   @override
   ActivityObservation analyze(ActivityCapture c) {
-    final camera = assessCamera(c.frames, c.durationMs, available: c.sensors.camera);
+    final camera =
+        assessCamera(c.frames, c.durationMs, available: c.sensors.camera);
     final lighting = assessLighting(c.frames);
     final trials = [for (final g in c.trials(trialStart)) _trial(c, g)];
     final windowsFramed = [
       for (final t in trials)
-        if (t.measures['framedFraction'] != null) (t.measures['framedFraction'] as num).toDouble()
+        if (t.measures['framedFraction'] != null)
+          (t.measures['framedFraction'] as num).toDouble()
     ];
     final framed = mean(windowsFramed);
     final pose = ModalityQuality(
@@ -39,23 +41,28 @@ class CopyMeAnalyzer implements ActivityAnalyzer {
             : framed >= 0.5
                 ? QualityStatus.valid
                 : QualityStatus.excluded,
-        reason: framed == null || framed < 0.5 ? ReasonCode.bodyNotVisible : null,
+        reason:
+            framed == null || framed < 0.5 ? ReasonCode.bodyNotVisible : null,
         value: framed);
     final quality = [camera, lighting, pose];
 
     final valid = trials.where((t) => t.valid).toList();
     final matched = valid.where((t) => t.measures['matched'] == true).toList();
-    final anyAction = valid.where((t) => t.measures['detected'] != null).toList();
+    final anyAction =
+        valid.where((t) => t.measures['detected'] != null).toList();
     final latencies = [for (final t in matched) t.measures['latencyMs'] as int];
     final features = <Feature>[
-      Feature('valid_trials', valid.length.toDouble(), Modality.pose, unit: 'count'),
+      Feature('valid_trials', valid.length.toDouble(), Modality.pose,
+          unit: 'count'),
       if (valid.isNotEmpty) ...[
         Feature('imitation_rate', matched.length / valid.length, Modality.pose,
             unit: 'ratio',
             reliability: valid.length >= P.minValidTrialsForPattern
                 ? Reliability.adequate
                 : Reliability.limited),
-        Feature('any_action_rate', anyAction.length / valid.length, Modality.pose, unit: 'ratio'),
+        Feature(
+            'any_action_rate', anyAction.length / valid.length, Modality.pose,
+            unit: 'ratio'),
         Feature(
             'rough_fidelity',
             mean(valid.map((t) => (t.measures['fidelity'] as num).toDouble()))!,
@@ -66,10 +73,13 @@ class CopyMeAnalyzer implements ActivityAnalyzer {
       if (latencies.isNotEmpty)
         Feature('median_onset_ms', median(latencies)!, Modality.pose,
             unit: 'ms',
-            reliability: latencies.length >= 2 ? Reliability.adequate : Reliability.limited),
+            reliability: latencies.length >= 2
+                ? Reliability.adequate
+                : Reliability.limited),
     ];
 
-    ActivityObservation result(ActivityStatus s, {ReasonCode? reason, List<PatternNote> notes = const []}) =>
+    ActivityObservation result(ActivityStatus s,
+            {ReasonCode? reason, List<PatternNote> notes = const []}) =>
         ActivityObservation(
             activity: ActivityId.copyMe,
             status: s,
@@ -81,15 +91,19 @@ class CopyMeAnalyzer implements ActivityAnalyzer {
             attempt: c.attempt,
             durationMs: c.durationMs);
 
-    if (!camera.usable) return result(ActivityStatus.insufficient, reason: camera.reason);
+    if (!camera.usable)
+      return result(ActivityStatus.insufficient, reason: camera.reason);
     if (valid.length >= P.minValidTrialsForPattern) {
       return result(ActivityStatus.valid,
-          notes: matched.isEmpty ? const [PatternNote.copyNoImitation] : const []);
+          notes:
+              matched.isEmpty ? const [PatternNote.copyNoImitation] : const []);
     }
-    if (!lighting.usable) return result(ActivityStatus.insufficient, reason: lighting.reason);
+    if (!lighting.usable)
+      return result(ActivityStatus.insufficient, reason: lighting.reason);
     return result(ActivityStatus.insufficient,
         reason: c.endedBy ??
-            (trials.isNotEmpty && trials.every((t) => t.reason == ReasonCode.bodyNotVisible)
+            (trials.isNotEmpty &&
+                    trials.every((t) => t.reason == ReasonCode.bodyNotVisible)
                 ? ReasonCode.bodyNotVisible
                 : ReasonCode.tooFewValidTrials));
   }
@@ -105,12 +119,14 @@ class CopyMeAnalyzer implements ActivityAnalyzer {
     final end = firstOf(group, windowEnd);
     if (start == null || end == null) {
       return TrialResult(index, TrialStatus.invalid,
-          reason: c.endedBy ?? ReasonCode.stoppedEarly, measures: {'action': target.name});
+          reason: c.endedBy ?? ReasonCode.stoppedEarly,
+          measures: {'action': target.name});
     }
     final window = framesBetween(c.frames, start.tMs, end.tMs);
     final framed = window.isEmpty
         ? 0.0
-        : window.where((f) => PoseActionDetector.framingOk(f.pose)).length / window.length;
+        : window.where((f) => PoseActionDetector.framingOk(f.pose)).length /
+            window.length;
     final detected = detector.detect(window);
     // A detected action proves the body was measurable even if framing dipped.
     if (detected == null && framed < 0.5) {
@@ -125,7 +141,11 @@ class CopyMeAnalyzer implements ActivityAnalyzer {
       'detected': detected?.action.name,
       'matched': matched,
       'latencyMs': detected == null ? null : detected.tMs - start.tMs,
-      'fidelity': matched ? 1.0 : detected != null ? 0.5 : 0.0,
+      'fidelity': matched
+          ? 1.0
+          : detected != null
+              ? 0.5
+              : 0.0,
     });
   }
 }

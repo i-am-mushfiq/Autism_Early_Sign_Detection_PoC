@@ -4,7 +4,11 @@ import 'package:flutter/widgets.dart';
 /// Rebuilds every display frame with the current session time, so drawn
 /// stimuli (bubbles, talking guide) use the same clock as the measurements.
 class FrameTicker extends StatefulWidget {
-  const FrameTicker({super.key, required this.nowMs, required this.builder, this.active = true});
+  const FrameTicker(
+      {super.key,
+      required this.nowMs,
+      required this.builder,
+      this.active = true});
   final int Function() nowMs;
   final Widget Function(BuildContext context, int nowMs) builder;
   final bool active;
@@ -13,7 +17,8 @@ class FrameTicker extends StatefulWidget {
   State<FrameTicker> createState() => _FrameTickerState();
 }
 
-class _FrameTickerState extends State<FrameTicker> with SingleTickerProviderStateMixin {
+class _FrameTickerState extends State<FrameTicker>
+    with SingleTickerProviderStateMixin {
   late final Ticker _ticker = createTicker((_) => setState(() {}));
 
   @override

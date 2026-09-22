@@ -29,14 +29,17 @@ class SocialStoryController extends ActivityController {
   /// Side of the talking guide in the current segment.
   GazeRegion get socialSide => segment <= 0
       ? _firstSocialSide
-      : (_firstSocialSide == GazeRegion.left ? GazeRegion.right : GazeRegion.left);
+      : (_firstSocialSide == GazeRegion.left
+          ? GazeRegion.right
+          : GazeRegion.left);
 
   /// Which story line is showing (cycles every few seconds).
   int get line => segment < 0 ? 0 : ((now - _segmentStart) ~/ _lineEveryMs) % 4;
 
   @override
   void onStart() {
-    _firstSocialSide = ctx.random.nextBool() ? GazeRegion.left : GazeRegion.right;
+    _firstSocialSide =
+        ctx.random.nextBool() ? GazeRegion.left : GazeRegion.right;
     _startSegment(0);
   }
 
@@ -44,7 +47,8 @@ class SocialStoryController extends ActivityController {
     segment = index;
     inGap = false;
     _segmentStart = now;
-    record(SocialStoryAnalyzer.segmentStart, {'index': index, 'socialSide': socialSide.name});
+    record(SocialStoryAnalyzer.segmentStart,
+        {'index': index, 'socialSide': socialSide.name});
     after(P.socialStorySegmentMs, () {
       record(SocialStoryAnalyzer.segmentEnd, {'index': index});
       if (index == 0) {
@@ -59,7 +63,8 @@ class SocialStoryController extends ActivityController {
   @override
   void onTick() {
     final recent = frames.where((f) => now - f.tMs <= 4000).toList();
-    lookingAway = elapsedMs > 4000 && (recent.isEmpty || !recent.any(usableFaceFrame));
+    lookingAway =
+        elapsedMs > 4000 && (recent.isEmpty || !recent.any(usableFaceFrame));
   }
 
   @override

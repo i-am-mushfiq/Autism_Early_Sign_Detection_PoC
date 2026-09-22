@@ -15,7 +15,10 @@ class ManualClock implements SessionClock {
 
 /// Sensor hub driven by tests: frames and audio are pushed explicitly.
 class FakeSensorHub implements SensorHub {
-  FakeSensorHub({SessionClock? clock, this.cameraAvailable = true, this.microphoneAvailable = true})
+  FakeSensorHub(
+      {SessionClock? clock,
+      this.cameraAvailable = true,
+      this.microphoneAvailable = true})
       : clock = clock ?? StopwatchClock();
 
   @override
@@ -30,11 +33,14 @@ class FakeSensorHub implements SensorHub {
   VisionMode mode = VisionMode.off;
 
   @override
-  SensorAvailability get availability =>
-      started ? SensorAvailability(camera: cameraAvailable, microphone: microphoneAvailable) : SensorAvailability.none;
+  SensorAvailability get availability => started
+      ? SensorAvailability(
+          camera: cameraAvailable, microphone: microphoneAvailable)
+      : SensorAvailability.none;
 
   @override
-  Future<SensorAvailability> start({required bool camera, required bool microphone}) async {
+  Future<SensorAvailability> start(
+      {required bool camera, required bool microphone}) async {
     started = true;
     cameraAvailable = cameraAvailable && camera;
     microphoneAvailable = microphoneAvailable && microphone;
@@ -56,18 +62,24 @@ class FakeSensorHub implements SensorHub {
   Widget? preview() => null;
 
   @override
+  Future<void> refreshAfterOrientationChange() async {}
+
+  @override
   Future<void> dispose() async {
     disposed = true;
   }
 }
 
 class FakePermissions implements PermissionGateway {
-  FakePermissions([this.result = const PermissionResult(PermissionState.granted, PermissionState.granted)]);
+  FakePermissions(
+      [this.result = const PermissionResult(
+          PermissionState.granted, PermissionState.granted)]);
   PermissionResult result;
   bool requested = false;
   @override
-  Future<PermissionResult> current() async =>
-      requested ? result : const PermissionResult(PermissionState.denied, PermissionState.denied);
+  Future<PermissionResult> current() async => requested
+      ? result
+      : const PermissionResult(PermissionState.denied, PermissionState.denied);
   @override
   Future<PermissionResult> request() async {
     requested = true;
@@ -81,7 +93,10 @@ class FakePermissions implements PermissionGateway {
 // ── Sample builders ─────────────────────────────────────────────────────
 
 VisionFrame face(int t, double yaw,
-        {double lighting = 0.5, double width = 0.3, double eyes = 0.9, double pitch = 0}) =>
+        {double lighting = 0.5,
+        double width = 0.3,
+        double eyes = 0.9,
+        double pitch = 0}) =>
     VisionFrame(
       tMs: t,
       mode: VisionMode.face,
@@ -96,7 +111,8 @@ VisionFrame face(int t, double yaw,
           rightEyeOpen: eyes),
     );
 
-VisionFrame noFace(int t, {double lighting = 0.5}) => VisionFrame(tMs: t, mode: VisionMode.face, lighting: lighting);
+VisionFrame noFace(int t, {double lighting = 0.5}) =>
+    VisionFrame(tMs: t, mode: VisionMode.face, lighting: lighting);
 
 /// Head orientation convention used by simulated children in tests:
 /// looking at the screen's left raises yaw, right lowers it.
@@ -108,7 +124,11 @@ const usableCalibration = CalibrationResult(
   leftYaw: leftYaw,
   rightYaw: rightYaw,
   noiseDeg: 2,
-  samples: {CalibrationTarget.center: 10, CalibrationTarget.left: 10, CalibrationTarget.right: 10},
+  samples: {
+    CalibrationTarget.center: 10,
+    CalibrationTarget.left: 10,
+    CalibrationTarget.right: 10
+  },
 );
 
 PoseObservation pose({
@@ -129,7 +149,8 @@ PoseObservation pose({
 /// Shoulder width in these poses is 0.2.
 PoseObservation restingPose() => pose(lwx: .35, lwy: .75, rwx: .65, rwy: .75);
 PoseObservation handsUpPose() => pose(lwx: .35, lwy: .15, rwx: .65, rwy: .15);
-PoseObservation handsTogetherPose() => pose(lwx: .49, lwy: .6, rwx: .51, rwy: .6);
+PoseObservation handsTogetherPose() =>
+    pose(lwx: .49, lwy: .6, rwx: .51, rwy: .6);
 PoseObservation handsApartPose() => pose(lwx: .30, lwy: .6, rwx: .70, rwy: .6);
 PoseObservation touchHeadPose() => pose(lwx: .35, lwy: .75, rwx: .55, rwy: .22);
 

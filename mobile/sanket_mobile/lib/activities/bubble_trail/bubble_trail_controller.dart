@@ -30,7 +30,8 @@ class Bubble {
   Offset centerAt(int tMs, Size board) {
     final p = progressAt(tMs).clamp(0.0, 1.0);
     final r = radius(board);
-    final x = board.width * (x0 + drift * p) + math.sin(p * math.pi * 3) * sway * board.width;
+    final x = board.width * (x0 + drift * p) +
+        math.sin(p * math.pi * 3) * sway * board.width;
     final y = board.height + r - p * (board.height + 2 * r);
     return Offset(x, y);
   }
@@ -57,7 +58,13 @@ class BubbleTrailController extends ActivityController {
   @override
   int get expectedDurationMs => P.bubbleDurationMs;
 
-  static const palette = [0xfff4a5c6, 0xff79c7f2, 0xffa4d657, 0xfff5c745, 0xffb890df];
+  static const palette = [
+    0xfff4a5c6,
+    0xff79c7f2,
+    0xffa4d657,
+    0xfff5c745,
+    0xffb890df
+  ];
 
   final List<Bubble> alive = [];
   final List<PoppedBubble> popped = [];
@@ -108,7 +115,8 @@ class BubbleTrailController extends ActivityController {
       return true;
     });
     popped.removeWhere((p) => t - p.atMs > 450);
-    if (alive.length < P.bubbleMaxConcurrent && t - _lastSpawn >= P.bubbleSpawnEveryMs) _spawn();
+    if (alive.length < P.bubbleMaxConcurrent &&
+        t - _lastSpawn >= P.bubbleSpawnEveryMs) _spawn();
     final idle = t - _lastTouch;
     showHint = idle >= P.bubbleInactivityHintMs;
     if (idle >= P.bubbleInactivityStopMs) {

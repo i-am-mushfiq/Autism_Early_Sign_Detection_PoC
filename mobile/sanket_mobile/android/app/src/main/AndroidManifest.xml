@@ -4,7 +4,10 @@
     <application
         android:label="Sanket"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@drawable/ic_launcher_sanket"
+        android:roundIcon="@drawable/ic_launcher_sanket">
         <activity
             android:name=".MainActivity"
             android:exported="true"

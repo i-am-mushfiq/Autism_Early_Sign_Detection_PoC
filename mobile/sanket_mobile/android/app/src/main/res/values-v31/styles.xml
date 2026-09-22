@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowSplashScreenBackground">#F6F7F3</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/sanket_mark</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#F6F7F3</item>
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">#F6F7F3</item>
+    </style>
+</resources>

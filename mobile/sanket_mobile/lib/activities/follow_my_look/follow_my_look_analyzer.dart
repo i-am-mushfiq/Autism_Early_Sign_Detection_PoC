@@ -23,7 +23,8 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
 
   @override
   ActivityObservation analyze(ActivityCapture c) {
-    final camera = assessCamera(c.frames, c.durationMs, available: c.sensors.camera);
+    final camera =
+        assessCamera(c.frames, c.durationMs, available: c.sensors.camera);
     final lighting = assessLighting(c.frames);
     final face = assessFace(c.frames, minFraction: 0.35);
     final gaze = c.calibration.quality;
@@ -33,17 +34,24 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
         reason: taps > 0 ? null : ReasonCode.noTouches, value: taps.toDouble());
     final quality = [camera, lighting, face, gaze, touch];
 
-    final classifier = gaze.usable && camera.usable ? CoarseGazeClassifier(c.calibration) : null;
+    final classifier = gaze.usable && camera.usable
+        ? CoarseGazeClassifier(c.calibration)
+        : null;
     final trials = [
       for (final g in c.trials(trialStart)) _trial(c, g, classifier)
     ];
     final valid = trials.where((t) => t.valid).toList();
-    final followed = valid.where((t) => t.measures['followed'] == true).toList();
-    final latencies = [for (final t in followed) t.measures['latencyMs'] as int];
-    final tapTrials = trials.where((t) => t.measures['tapCorrect'] != null).toList();
+    final followed =
+        valid.where((t) => t.measures['followed'] == true).toList();
+    final latencies = [
+      for (final t in followed) t.measures['latencyMs'] as int
+    ];
+    final tapTrials =
+        trials.where((t) => t.measures['tapCorrect'] != null).toList();
 
     final features = <Feature>[
-      Feature('valid_trials', valid.length.toDouble(), Modality.gaze, unit: 'count'),
+      Feature('valid_trials', valid.length.toDouble(), Modality.gaze,
+          unit: 'count'),
       if (valid.isNotEmpty)
         Feature('follow_rate', followed.length / valid.length, Modality.gaze,
             unit: 'ratio',
@@ -53,7 +61,9 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
       if (latencies.isNotEmpty)
         Feature('median_latency_ms', median(latencies)!, Modality.gaze,
             unit: 'ms',
-            reliability: latencies.length >= 2 ? Reliability.adequate : Reliability.limited),
+            reliability: latencies.length >= 2
+                ? Reliability.adequate
+                : Reliability.limited),
       if (tapTrials.isNotEmpty)
         Feature(
             'tap_correct_rate',
@@ -64,7 +74,8 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
             reliability: Reliability.limited),
     ];
 
-    ActivityObservation result(ActivityStatus s, {ReasonCode? reason, List<PatternNote> notes = const []}) =>
+    ActivityObservation result(ActivityStatus s,
+            {ReasonCode? reason, List<PatternNote> notes = const []}) =>
         ActivityObservation(
             activity: ActivityId.followMyLook,
             status: s,
@@ -78,12 +89,14 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
 
     if (valid.length >= P.minValidTrialsForPattern) {
       return result(ActivityStatus.valid,
-          notes: followed.isEmpty ? const [PatternNote.lookNoFollow] : const []);
+          notes:
+              followed.isEmpty ? const [PatternNote.lookNoFollow] : const []);
     }
     if (trials.isNotEmpty &&
         taps == 0 &&
         trials.every((t) => t.reason == ReasonCode.notAttendingBeforePrompt)) {
-      return result(ActivityStatus.nonParticipation, reason: ReasonCode.noParticipation);
+      return result(ActivityStatus.nonParticipation,
+          reason: ReasonCode.noParticipation);
     }
     final reason = !camera.usable
         ? camera.reason
@@ -95,21 +108,26 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
     return result(ActivityStatus.insufficient, reason: reason);
   }
 
-  TrialResult _trial(ActivityCapture c, List<ActivityEvent> group, CoarseGazeClassifier? classifier) {
+  TrialResult _trial(ActivityCapture c, List<ActivityEvent> group,
+      CoarseGazeClassifier? classifier) {
     final index = group.first.get<int>('index');
     final side = group.first.get<String>('side');
     final tapEvent = firstOf(group, tap);
     final tapMeasures = <String, Object?>{
       'side': side,
-      'tapCorrect': tapEvent == null ? null : tapEvent.get<String>('side') == side,
+      'tapCorrect':
+          tapEvent == null ? null : tapEvent.get<String>('side') == side,
     };
-    TrialResult invalid(ReasonCode r) =>
-        TrialResult(index, TrialStatus.invalid, reason: r, measures: tapMeasures);
+    TrialResult invalid(ReasonCode r) => TrialResult(index, TrialStatus.invalid,
+        reason: r, measures: tapMeasures);
 
-    if (firstOf(group, centerTimeout) != null) return invalid(ReasonCode.notAttendingBeforePrompt);
+    if (firstOf(group, centerTimeout) != null)
+      return invalid(ReasonCode.notAttendingBeforePrompt);
     final cueEvent = firstOf(group, cue);
     if (cueEvent == null) return invalid(c.endedBy ?? ReasonCode.stoppedEarly);
-    if (classifier == null) return invalid(c.calibration.reason ?? ReasonCode.gazeCalibrationUnusable);
+    if (classifier == null)
+      return invalid(
+          c.calibration.reason ?? ReasonCode.gazeCalibrationUnusable);
     final tCue = cueEvent.tMs;
 
     final pre = framesBetween(c.frames, tCue - 800, tCue);
@@ -119,7 +137,8 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
     }
     final preRegions = [
       for (final f in preUsable)
-        if (classifier.classify(f) != GazeRegion.uncertain) classifier.classify(f)
+        if (classifier.classify(f) != GazeRegion.uncertain)
+          classifier.classify(f)
     ];
     if (preRegions.isNotEmpty && preRegions.last.name == side) {
       return invalid(ReasonCode.alreadyLookingAtTarget);
@@ -132,7 +151,8 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
     final look = firstSideLook(window, classifier);
     if (look == null) {
       final usable = window.where(usableGazeFrame).length;
-      if (window.isEmpty || usable / window.length < P.minFaceFractionInWindow) {
+      if (window.isEmpty ||
+          usable / window.length < P.minFaceFractionInWindow) {
         return invalid(ReasonCode.faceNotVisible);
       }
     }
@@ -147,7 +167,8 @@ class FollowMyLookAnalyzer implements ActivityAnalyzer {
 
 /// First left/right region held for two consecutive classified frames, with
 /// the time of the first of them.
-(GazeRegion, int)? firstSideLook(List<VisionFrame> window, CoarseGazeClassifier classifier) {
+(GazeRegion, int)? firstSideLook(
+    List<VisionFrame> window, CoarseGazeClassifier classifier) {
   GazeRegion? previous;
   int? previousT;
   for (final f in window) {

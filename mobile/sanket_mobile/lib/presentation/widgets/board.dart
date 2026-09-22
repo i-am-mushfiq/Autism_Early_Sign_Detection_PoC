@@ -4,7 +4,8 @@ import '../theme.dart';
 
 /// The child-facing play area shared by all activities.
 class ActivityBoard extends StatelessWidget {
-  const ActivityBoard({super.key, required this.child, this.colors, this.banner});
+  const ActivityBoard(
+      {super.key, required this.child, this.colors, this.banner});
   final Widget child;
   final List<Color>? colors;
 
@@ -24,14 +25,17 @@ class ActivityBoard extends StatelessWidget {
           ),
           child: Stack(fit: StackFit.expand, children: [
             child,
-            if (banner != null) Positioned(top: 12, left: 12, right: 12, child: Center(child: banner)),
+            if (banner != null)
+              Positioned(
+                  top: 12, left: 12, right: 12, child: Center(child: banner)),
           ]),
         ),
       );
 }
 
 class BoardBanner extends StatelessWidget {
-  const BoardBanner({super.key, required this.text, this.icon, this.emphasis = false});
+  const BoardBanner(
+      {super.key, required this.text, this.icon, this.emphasis = false});
   final String text;
   final IconData? icon;
   final bool emphasis;
@@ -41,7 +45,8 @@ class BoardBanner extends StatelessWidget {
         duration: const Duration(milliseconds: 250),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: emphasis ? SanketColors.primary : Colors.white.withOpacity(.92),
+          color:
+              emphasis ? SanketColors.primary : Colors.white.withOpacity(.92),
           borderRadius: BorderRadius.circular(22),
           boxShadow: const [BoxShadow(color: Color(0x22000000), blurRadius: 8)],
         ),
@@ -71,5 +76,8 @@ class Mascot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Image.asset('assets/mascot/$emotion.png', height: height, semanticLabel: label, excludeFromSemantics: label == null);
+      Image.asset('assets/mascot/$emotion.png',
+          height: height,
+          semanticLabel: label,
+          excludeFromSemantics: label == null);
 }

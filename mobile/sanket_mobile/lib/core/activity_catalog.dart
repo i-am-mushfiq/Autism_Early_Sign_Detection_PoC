@@ -19,7 +19,14 @@ enum InterpretationRole {
   descriptive,
 }
 
-enum ActivityId { socialStory, nameResponse, followMyLook, bubbleTrail, copyMe, switchIt }
+enum ActivityId {
+  socialStory,
+  nameResponse,
+  followMyLook,
+  bubbleTrail,
+  copyMe,
+  switchIt
+}
 
 class ActivityDefinition {
   const ActivityDefinition({
@@ -64,7 +71,12 @@ const activityCatalog = <ActivityDefinition>[
       // Spec: "Evidence-backed / emerging camera measurement".
       id: ActivityId.followMyLook,
       evidence: EvidenceLevel.evidenceBacked,
-      modalities: [Modality.camera, Modality.face, Modality.gaze, Modality.touch]),
+      modalities: [
+        Modality.camera,
+        Modality.face,
+        Modality.gaze,
+        Modality.touch
+      ]),
   ActivityDefinition(
       id: ActivityId.bubbleTrail,
       evidence: EvidenceLevel.promising,

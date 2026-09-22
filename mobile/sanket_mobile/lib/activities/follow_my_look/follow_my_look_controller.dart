@@ -16,7 +16,8 @@ class FollowMyLookController extends ActivityController {
   @override
   ActivityAnalyzer get analyzer => const FollowMyLookAnalyzer();
   @override
-  int get expectedDurationMs => P.lookTrials * (P.lookPreCueMs + P.lookWindowMs + P.lookRewardMs + 900);
+  int get expectedDurationMs =>
+      P.lookTrials * (P.lookPreCueMs + P.lookWindowMs + P.lookRewardMs + 900);
 
   late final CoarseGazeClassifier? _classifier =
       ctx.calibration.usable ? CoarseGazeClassifier(ctx.calibration) : null;
@@ -35,12 +36,18 @@ class FollowMyLookController extends ActivityController {
   int _waitStart = 0;
 
   @override
-  double get progress =>
-      phase == ActivityPhase.running ? ((trial - 1).clamp(0, P.lookTrials) / P.lookTrials) : super.progress;
+  double get progress => phase == ActivityPhase.running
+      ? ((trial - 1).clamp(0, P.lookTrials) / P.lookTrials)
+      : super.progress;
 
   @override
   void onStart() {
-    _sides = [GazeRegion.left, GazeRegion.right, GazeRegion.left, GazeRegion.right]..shuffle(ctx.random);
+    _sides = [
+      GazeRegion.left,
+      GazeRegion.right,
+      GazeRegion.left,
+      GazeRegion.right
+    ]..shuffle(ctx.random);
     trial = 0;
     _beginTrial();
   }
@@ -54,7 +61,8 @@ class FollowMyLookController extends ActivityController {
     lookPhase = LookPhase.waitingCenter;
     _centerRun = 0;
     _waitStart = now;
-    record(FollowMyLookAnalyzer.trialStart, {'index': trial, 'side': target!.name});
+    record(FollowMyLookAnalyzer.trialStart,
+        {'index': trial, 'side': target!.name});
     if (!gazeAvailable) {
       // Without calibrated gaze, the guide still looks after a fixed pause so
       // tap responses can be recorded (reported with limited reliability).
@@ -73,7 +81,8 @@ class FollowMyLookController extends ActivityController {
   void onFrame(VisionFrame frame) {
     final f = frame;
     if (lookPhase != LookPhase.waitingCenter || _classifier == null) return;
-    _centerRun = _classifier.classify(f) == GazeRegion.center ? _centerRun + 1 : 0;
+    _centerRun =
+        _classifier.classify(f) == GazeRegion.center ? _centerRun + 1 : 0;
     // The guide first looks at the child for a moment before turning.
     if (_centerRun >= 2 && now - _waitStart >= 600) _cue();
   }
@@ -96,7 +105,9 @@ class FollowMyLookController extends ActivityController {
 
   /// The child tapped one of the two toys.
   void tapToy(GazeRegion side) {
-    if (phase != ActivityPhase.running || lookPhase != LookPhase.looking || tapped != null) return;
+    if (phase != ActivityPhase.running ||
+        lookPhase != LookPhase.looking ||
+        tapped != null) return;
     tapped = side;
     record(FollowMyLookAnalyzer.tap, {'side': side.name});
     notify();

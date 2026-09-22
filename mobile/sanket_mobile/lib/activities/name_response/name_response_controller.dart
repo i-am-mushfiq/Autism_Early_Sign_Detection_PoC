@@ -33,11 +33,13 @@ class NameResponseController extends ActivityController {
 
   int _token = 0;
   int? _attentionSince;
+  int? _lastFacingT;
   int _promptMs = 0;
   double? _floorDb;
   int _attentionTimeoutsInRow = 0;
 
-  double get _centerYaw => ctx.calibration.usable ? ctx.calibration.centerYaw! : 0;
+  double get _centerYaw =>
+      ctx.calibration.usable ? ctx.calibration.centerYaw! : 0;
 
   @override
   double get progress => phase == ActivityPhase.running
@@ -57,6 +59,7 @@ class NameResponseController extends ActivityController {
     final token = ++_token;
     namePhase = NamePhase.waitingAttention;
     _attentionSince = null;
+    _lastFacingT = null;
     record(NameResponseAnalyzer.trialStart, {'index': attempt});
     after(P.nameAttentionTimeoutMs, () {
       if (token != _token || namePhase != NamePhase.waitingAttention) return;
@@ -70,19 +73,29 @@ class NameResponseController extends ActivityController {
   void onFrame(VisionFrame frame) {
     final f = frame;
     if (namePhase != NamePhase.waitingAttention) return;
-    final facing = usableFaceFrame(f) && (f.face!.yawDeg - _centerYaw).abs() <= P.nameFacingMaxYawDeg;
+    final facing = usableFaceFrame(f) &&
+        (f.face!.yawDeg - _centerYaw).abs() <= P.nameFacingMaxYawDeg;
     if (!facing) {
-      _attentionSince = null;
+      // A brief tracker miss (blink, momentary jitter) doesn't restart the
+      // streak; only a longer gap means the child actually looked away.
+      if (_attentionSince != null &&
+          f.tMs - _lastFacingT! > P.nameAttentionGapToleranceMs) {
+        _attentionSince = null;
+      }
       return;
     }
     _attentionSince ??= f.tMs;
+    _lastFacingT = f.tMs;
     if (f.tMs - _attentionSince! >= P.nameAttentionMs) _prompt();
   }
 
   void _prompt() {
     final token = _token;
     _attentionTimeoutsInRow = 0;
-    final quiet = [for (final a in audio) if (now - a.tMs <= 1200) a];
+    final quiet = [
+      for (final a in audio)
+        if (now - a.tMs <= 1200) a
+    ];
     _floorDb = quiet.length >= 5 ? median(quiet.map((a) => a.rmsDb)) : null;
     tapFallback = !ctx.sensors.availability.microphone ||
         _floorDb == null ||
@@ -102,23 +115,31 @@ class NameResponseController extends ActivityController {
 
   @override
   void onAudio(AudioLevel level) {
-    if (namePhase != NamePhase.prompting || tapFallback || _floorDb == null) return;
-    final since = [for (final a in audio) if (a.tMs >= _promptMs) a];
+    if (namePhase != NamePhase.prompting || tapFallback || _floorDb == null)
+      return;
+    final since = [
+      for (final a in audio)
+        if (a.tMs >= _promptMs) a
+    ];
     final onset = detectCallOnset(since, _floorDb!);
     if (onset != null) _called('audio', onset);
   }
 
   /// The caregiver's "I called" button (fallback when the mic can't time it).
   void caregiverCalled() {
-    if (phase != ActivityPhase.running || namePhase != NamePhase.prompting) return;
+    if (phase != ActivityPhase.running || namePhase != NamePhase.prompting)
+      return;
     _called('caregiver', now);
   }
 
   void _called(String source, int atMs) {
-    record(NameResponseAnalyzer.call, {
-      'source': source,
-      if (_floorDb != null) 'floorDb': _floorDb!,
-    }, atMs);
+    record(
+        NameResponseAnalyzer.call,
+        {
+          'source': source,
+          if (_floorDb != null) 'floorDb': _floorDb!,
+        },
+        atMs);
     namePhase = NamePhase.responseWindow;
     final token = _token;
     after(atMs + P.nameResponseWindowMs - now, () {
